@@ -8,6 +8,7 @@ import {
     StyleSheet, 
     View,
 } from 'react-native';
+import { userIsOnline } from "../../../utils/utils";
 
 const LOGOUT_DESC = strings.inbox.logoutDesc;
 const LOGOUT = strings.inbox.logout;
@@ -24,6 +25,10 @@ export default class LogoutButton extends Component<Props> {
     logout = () => {
         this.sessionStore.userId = null
         AsyncStorage.removeItem("userId")
+        userIsOnline(this.sessionStore.userId, 
+            this.sessionStore.endpoints.user, 
+            this.sessionStore.endpoints.methods.post,
+            isOnline=false)
         this.props.onPress()
     }
 

@@ -20,10 +20,10 @@ export function getDate(_for, date) {
 /**
  * Let the server know that the user is online.
  */
-export function userIsOnline(userId, endpoint, method) {
+export function userIsOnline(userId, endpoint, method, isOnline=false) {
     let data = {
         userId: userId,
-        isOnline: true
+        isOnline: isOnline
     }
     request(data, endpoint, method).then((result) => {
         DEBUG && console.log(result)

@@ -79,7 +79,8 @@ export default class Login extends Component {
             this.sessionStore.downloadError    = false
             userIsOnline(this.sessionStore.userId, 
                             this.sessionStore.endpoints.user, 
-                            this.sessionStore.endpoints.methods.post)
+                            this.sessionStore.endpoints.methods.post,
+                            isOnline=true)
             this.initSocket()
             this.props.navigation.navigate('Home')
           }).catch((err) => {
