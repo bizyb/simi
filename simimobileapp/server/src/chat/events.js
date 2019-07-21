@@ -55,7 +55,7 @@ const _onJoinHelper = (roomId, data, socket, questionId, update=false) => {
             dbApi.update(dbApi.collections.chatRoom, data).then((result) => {
                 // the chat room fields are now fully populated so locate the 
                 // op and sme user information
-                // settings.DEBUG && console.log("onJoinHelper after updating: ", result)
+                settings.DEBUG && console.log("onJoinHelper after updating: ", result)
                 let query = { roomId: data.roomId }
                 dbApi.find(dbApi.collections.chatRoom, query).then((crResult) => {
                     query = { userId: crResult[0].op.userId }
@@ -124,6 +124,7 @@ const _onJoinHelper = (roomId, data, socket, questionId, update=false) => {
 const onJoin = (data, socket) => {
     let questionId = data.questionId
     let query = { roomId: data.roomId }
+    settings.DEBUG && console.log("Atteppting to join with data: ", data)
     dbApi.find(dbApi.collections.chatRoom, query).then((result) => {
         if (result.length == 0) {
             // create a new chat room record 
@@ -141,6 +142,7 @@ const onJoin = (data, socket) => {
                 questionId: data.questionId,
                 numUsers: 1,
             }
+	    settings.DEBUG && ("No room found so creating a new room with data: ", metaData)	
             _onJoinHelper(data.roomId, metaData, socket, questionId, update=false)
         }
         else {
@@ -326,7 +328,7 @@ const onLeave = (data, socket) => {
 
 
 const eventHandler = (socket) => {
-   
+    settings.DEBUG && console.log("Setting socket.io event handlers")   
     /**
      * Assign this socket the user id this socket belongs to.
      * Later, userId is used in cleanup on disconnect.

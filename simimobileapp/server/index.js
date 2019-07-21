@@ -142,6 +142,7 @@ app.post(endpoints.REST.question, (req, res) => {
         created:        new Date(),
         isAnswered:     false,
     }
+    settings.DEBUG && console.log("New question received: ", data)
     dbApi.insert(dbApi.collections.question, data).then((__result) => {
         api.findSmes({
             question: data.question,
@@ -287,10 +288,12 @@ app.get(endpoints.REST.swipeDeck, (req, res) => {
  * and available socket events.
  */
 app.get(endpoints.REST.download, (req, res) => {
+    settings.DEBUG && console.log("Download requested on userId: ", req.query.userId)
     let query = { userId: req.query.userId }
     dbApi.find(dbApi.collections.inbox, query).then((inboxRes) => {
         dbApi.find(dbApi.collections.knowledgebase, query).then((kbRes) => {
             dbApi.find(dbApi.collections.user, query).then((userRes) => {
+		settings.DEBUG && console.log("User result found for download: ", userRes)
                 res.send(JSON.stringify({
                     knowledgeBaseData: kbRes,
                     inboxData: inboxRes,

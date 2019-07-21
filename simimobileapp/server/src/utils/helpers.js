@@ -89,7 +89,8 @@ const reformQueue = (userId) => {
 const updateQuestionQueue = (query) => {
     return new Promise((resolve, reject) => {
         dbApi.find(dbApi.collections.user, query).then((result) => {
-            let queue = result[0].queue
+            if (result.length == 0) {resolve([])}
+	    let queue = result[0].queue
             let questionIds = queue.map(item => item.questionId)
             let newQuery = {
                 questionId: { $in: questionIds}
