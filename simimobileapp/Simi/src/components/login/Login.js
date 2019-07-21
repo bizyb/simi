@@ -96,8 +96,8 @@ export default class Login extends Component {
      * actions.
      */
     initSocket = () => {
-        DEBUG && console.log("Attempting to init socket connection to: ", this.sessionStore.endpoints.root)
-        this.sessionStore.socket =  io.connect(this.sessionStore.endpoints.root)
+        DEBUG && console.log("Attempting to init socket connection to: ", this.sessionStore.endpoints.socketRoot)
+        this.sessionStore.socket =  io.connect(this.sessionStore.endpoints.socketRoot)
         
         this.sessionStore.socket.on(this.sessionStore.events.connect, () => {
             DEBUG && console.log("Socket connection made")
