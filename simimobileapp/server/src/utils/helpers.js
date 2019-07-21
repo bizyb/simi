@@ -89,20 +89,21 @@ const reformQueue = (userId) => {
 const updateQuestionQueue = (query) => {
     return new Promise((resolve, reject) => {
         dbApi.find(dbApi.collections.user, query).then((result) => {
-            let queue = result[0].queue
+            if (result.length == 0) {resolve([])}
+	    let queue = result[0].queue
             let questionIds = queue.map(item => item.questionId)
             let newQuery = {
                 questionId: { $in: questionIds}
             }
-            settings.DEBUG && console.log("Updat question query: ", newQuery)
+	    settings.DEBUG && console.log("Update question query: ", newQuery)
             dbApi.find(dbApi.collections.question, newQuery).then((qResult) => {
-                settings.DEBUG && console.log("Questions found: ", qResult)
+		    //settings.DEBUG && console.log("Questions found: ", qResult)
                 let activeQuestions = qResult.filter(item => !item.isAnswered)
                 let activeQuestionIds = activeQuestions.map(item => item.questionId)
-                settings.DEBUG && console.log("activeQuestions: ", activeQuestions)
-                settings.DEBUG && console.log("Old queue: ", queue)
+		    //settings.DEBUG && console.log("activeQuestions: ", activeQuestions)
+		    //settings.DEBUG && console.log("Old queue: ", queue)
                 let updatedQueue = queue.filter(old => activeQuestionIds.includes(old.questionId))
-                settings.DEBUG && console.log("updatedQueue: ", updatedQueue)
+		    //settings.DEBUG && console.log("updatedQueue: ", updatedQueue)
                 let update = {
                     userId: query.userId,
                     queue: updatedQueue,

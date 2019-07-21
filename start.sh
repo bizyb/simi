@@ -4,11 +4,11 @@ cd simiwebapp/client
 docker build -t client .
 cd ../..
 
-docker stop webappserver
-docker rm webappserver
-cd simiwebapp/server
-docker build -t webappserver .
-cd ../..
+#docker stop webappserver
+#docker rm webappserver
+#cd simiwebapp/server
+#docker build -t webappserver .
+#cd ../..
 
 docker stop mobileappserver
 docker rm mobileappserver

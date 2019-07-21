@@ -1,5 +1,6 @@
 const REST = {
     root: "https://simichat.net/mobile",
+    socketRoot: "https://simichat.net",
     chatLog: "/chatLog",
     download: "/download",
     user: "/user",
