@@ -49,7 +49,8 @@ app.post(endpoints.REST.login, (req, res) => {
             userData[LAST_MODIFIED] = new Date()
             userData[CREATED] = new Date()
             userData[QUEUE] = []
-            userData["isNewUser"] = true
+            userData.isNewUser = true
+	   userData.role = "user"
             dbApi.insert(dbApi.collections.user, userData).then((iResult) => {
                 obj[USER_ID] = userId
                 res.send(JSON.stringify(obj))
@@ -86,8 +87,10 @@ app.post(endpoints.REST.user, (req, res) => {
         helpers.activityLog(req.body.userId, cleanup=true)
         helpers.activityLog(req.body.userId) 
     }
+    let query = req.body
+    query.role = "user"
     let msg = {Status: "OK"}
-    dbApi.update(dbApi.collections.user, req.body).then((result) => {
+    dbApi.update(dbApi.collections.user, query).then((result) => {
         settings.DEBUG && console.log("User update: ", result)
         res.send(JSON.stringify(msg))
     }).catch((err) => {
@@ -103,13 +106,14 @@ app.post(endpoints.REST.user, (req, res) => {
  * just set the number of users to be -1.
  */
 app.get(endpoints.REST.user, (req, res) => {
-    settings.DEBUG && console.log("Number of users online requested")
     let query = {
-        isOnline: true
+        isOnline: true,
+	role: "user",
     }
     let response = {count: -1}
     dbApi.find(dbApi.collections.user, query).then((result) => {
         settings.DEBUG && console.log("Number of users online: ", result.length)
+	settings.DEBUG && console.log("Users found: ", result)
         response.count = result.length
         res.send(JSON.stringify(response))
     }).catch((err) => {

@@ -154,11 +154,15 @@ const onJoin = (data, socket) => {
                     socketId: socket.id,
                 },
             }
+		settings.DEBUG && ("Room found so updating with data: ", updateData)
             // Some sanity check... make sure op and sme are not
             // the same person
             if (result[0].op.userId != updateData.sme.userId) {
                 _onJoinHelper(data.roomId, updateData, socket, questionId, update=true)
-            }
+            } else {
+		    settings.DEBUG && ("Op and Sme are the same person! Cannot join chat room.")
+	    }
+
             
         }
     }).catch((err) => {
@@ -294,6 +298,7 @@ const pushToInbox = (roomId, isOp=false) => {
 
 const onLeave = (data, socket) => {
     // push chat log to the inbox
+    settings.DEBUG && console.log("Pushing to inbox with data: ", data)
     pushToInbox(data.roomId, data.isOp)
     let query = { roomId: data.roomId }
     dbApi.find(dbApi.collections.chatRoom, query).then((fResult) => {
@@ -334,11 +339,10 @@ const eventHandler = (socket) => {
      * Later, userId is used in cleanup on disconnect.
      */
     socket.on(endpoints.socket.onUserId, (data) => {
-            settings.DEBUG("User Id set for socket with id: ", socket.id)
+            settings.DEBUG && console.log("User Id set for socket with id: ", socket.id)
 	    socket["userId"] = data.userId
     })
     socket.on(endpoints.socket.join, (data) => {
-	    settings.DEBUG("onJoin listener set")
         onJoin(data, socket)  
     })
 
