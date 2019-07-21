@@ -182,6 +182,7 @@ export default class App extends Component<Props> {
   // }
 
   cleanup = () => {
+    DEBUG && console.log("Attempting session cleanup")
     let data = {
         userId: this.sessionStore.userId,
         questionId: this.qStore.questionId,
@@ -205,7 +206,11 @@ export default class App extends Component<Props> {
         this.sessionStore.endpoints.user, 
         this.sessionStore.endpoints.methods.post)
 
-    } else { this.cleanup() }
+    } else {
+      // cleanup if we have logged in user
+      if (this.sessionStore.userId) { this.cleanup() } 
+      
+    }
   }
   
   render() {

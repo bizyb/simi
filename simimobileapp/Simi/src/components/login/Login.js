@@ -64,6 +64,7 @@ export default class Login extends Component {
             userId: this.sessionStore.userId,
           }
         request(data, endpoints.download, endpoints.methods.get).then((result) => {
+            DEBUG && console.log("Download Result: ", result)
             this.kbStore.data               = result.knowledgeBaseData
             this.iStore.data                = result.inboxData
             this.sessionStore.isPopulated   = true
