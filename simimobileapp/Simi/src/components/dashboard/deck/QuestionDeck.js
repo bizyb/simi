@@ -153,6 +153,7 @@ rightSwipeHandler = () => {
   }
   
   request(data, this.sessionStore.endpoints.rightSwipe, this.sessionStore.endpoints.methods.get).then((result) => {
+    DEBUG && console.log("rightSwipe: ", result)
     if (result.canJoin) {
       join(this.sessionStore, this.qStore)
       this.props.navigation.navigate("ChatRoom")

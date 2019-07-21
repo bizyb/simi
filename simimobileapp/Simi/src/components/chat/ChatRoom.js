@@ -148,6 +148,7 @@ onLeave = () => {
  * emit the preamble.
  */
 onNewConnection = () => {
+  DEBUG && console.log("Socket events: ", this.sessionStore.events)
   let newData = []
   let keys = {}
   let preamble = {

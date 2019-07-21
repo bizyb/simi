@@ -44,25 +44,25 @@ export default class Login extends Component {
     };
     
     componentDidMount() {
-        // If the user has previously logged in, then load the 
-        // app. Otherwise, continue with the login screen
-        AsyncStorage.getItem('userId').then((value) => {
-            this.sessionStore.asyncHasReturned = true
-            if (value) {
-                this.sessionStore.userId = value
-                this.setFirstName()
-                this.download()
-            }
-        }).catch((err) => {
-            DEBUG && console.log(err)
-        })
+        this.getUserId()
         
+    }
+    
+    getUserId = async () => {
+        let value = await AsyncStorage.getItem('userId')
+        if (value) {
+            this.sessionStore.userId = value
+            this.setFirstName()
+            this.download()
+        } 
+
     }
 
     /**
      * Query the server and prepopulate all the relevant screens
      */
     download = () => {
+        DEBUG && console.log("==== Attempting to download user data===")
         this.sessionStore.downloadComplete = false
         let data = {
             userId: this.sessionStore.userId,
@@ -214,15 +214,12 @@ export default class Login extends Component {
     }
 
     render() {
-        // If AsyncStorage hasn't returned yet, then just show a blank screen
-        // This is better than flashing the login screen and then navigating 
-        // to Home if userId has been found
       return (
           <View style={{flex: 1}}>
-          {!this.sessionStore.downloadComplete
+          {this.sessionStore.userId && !this.sessionStore.downloadComplete
             && this.renderDownloadProgress()
           }
-          {this.sessionStore.asyncHasReturned && this.sessionStore.downloadComplete &&
+          {!this.sessionStore.userId &&
           <View style={styles.container}>
                 <View style={styles.logoContainer}>
                     <Logo/>
