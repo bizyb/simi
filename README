@@ -119,21 +119,3 @@ This user is automatically created.
 # TODO 
 ⋅⋅* supervisord/k8 to manage the containers 
 ⋅⋅* secure endpoints where user login status check isn't already being done
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Dashboard: TepjFoNC1
-un: bmelesse
-pw: IDfc6FQ_F
