@@ -1,0 +1,47 @@
+version: '3.5'
+
+networks:
+  esnet:
+  mongonet:
+    driver: bridge
+services:
+  mongodb:
+    container_name: mongodb_container
+    image: 'bitnami/mongodb:latest'
+    volumes:
+      - /data/db:/bitnami
+    ports:
+      - 27017:27017
+    networks:
+      - mongonet
+    hostname: mongodb_container
+  # sunbeam:
+  #   container_name: sunbeamflask_container
+  #   image: 'sunbeam'
+  #   ports:
+  #     - "5000:80"
+  #   volumes:
+  #     - /data/sunbeam/ml:/app/ml/models
+  #   networks:
+  #     - mongonet
+  #   hostname: sunbeamapp_container
+#   elasticsearch:
+#     image: docker.elastic.co/elasticsearch/elasticsearch:6.6.2
+#     container_name: elasticsearch
+#     environment:
+#       - cluster.name=docker-cluster
+#       - bootstrap.memory_lock=true
+#       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+#     ulimits:
+#       memlock:
+#         soft: -1
+#         hard: -1
+#     volumes:
+#       - esdata1:/usr/share/elasticsearch/data
+#     ports:
+#       - 9200:9200
+#     networks:
+#       - esnet
+# volumes:
+#   esdata1:
+#     driver: local

@@ -1,0 +1,58 @@
+version: '3.5'
+networks:
+  webappnetwork:
+    driver: bridge
+services:
+  mongodb:
+    container_name: mongodb_container
+    image: 'bitnami/mongodb:latest'
+    restart: always
+    volumes:
+      - /data/db:/bitnami
+    expose:
+      - "27017"
+    networks:
+      - webappnetwork
+    hostname: mongodb
+  webappserver:
+    container_name: client
+    image: 'client'
+    restart: always
+    hostname: client
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./data/nginx:/etc/nginx/conf.d
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    networks:
+      - webappnetwork
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+  webappserver:
+    container_name: webappserver
+    image: 'webappserver'
+    restart: always
+    hostname: webappserver
+    expose:
+      - "5000"
+    networks:
+      - webappnetwork
+  mobileappserver:
+    container_name: mobileappserver
+    image: 'mobileappserver'
+    restart: always
+    hostname: mobileappserver
+    expose:
+      - "5001"
+    networks:
+      - webappnetwork
+  certbot:
+    image: certbot/certbot
+    restart: always
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
+  

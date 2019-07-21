@@ -1,0 +1,44 @@
+{
+  "name": "Simi",
+  "version": "0.0.2",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@babel/plugin-proposal-decorators": "^7.4.4",
+    "@react-native-community/async-storage": "^1.5.0",
+    "axios": "^0.19.0",
+    "lodash.clonedeep": "^4.5.0",
+    "mobx": "^5.10.1",
+    "mobx-react": "^5.4.3",
+    "moment": "^2.24.0",
+    "react": "16.8.3",
+    "react-native": "0.59.9",
+    "react-native-dialog": "^5.6.0",
+    "react-native-easy-grid": "^0.2.1",
+    "react-native-fbsdk": "^0.10.1",
+    "react-native-gesture-handler": "^1.3.0",
+    "react-native-indicators": "^0.13.0",
+    "react-native-simple-dialogs": "^1.1.0",
+    "react-native-star-rating": "^1.1.0",
+    "react-native-vector-icons": "^6.5.0",
+    "react-native-webview": "^5.12.0",
+    "react-navigation": "^3.11.0",
+    "save": "^2.4.0",
+    "shortid": "^2.2.14",
+    "socket.io-client": "^2.1.1"
+  },
+  "devDependencies": {
+    "@babel/core": "7.4.5",
+    "@babel/runtime": "7.4.5",
+    "babel-jest": "24.8.0",
+    "jest": "24.8.0",
+    "metro-react-native-babel-preset": "0.54.1",
+    "react-test-renderer": "16.8.3"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}

@@ -1,0 +1,413 @@
+===================
+App
+--------------------
+do:
+    1. Logo images for Android and iOS
+    2. (not going to do this for now) Dynamically select langauge and load the appropriate language file 
+        => For now, simulate user-based language selection with a separate
+            screen before login (if first time user), save the selection to 
+            AsyncStorage and load the appropriate language file 
+            => to do so, parameterize the import statements for strings.json
+    3. Welcome/How to use Simi message 
+
+===================
+Login screen
+--------------------
+do:
+ 
+    4. Animated indicator while waiting for server response
+    5. Use AsyncStorage to check if existing user and login automatically
+    6. If new user, contact the server, wait for the response, and save the 
+        reponse token with AsyncStorage
+    7. If error logging in, alert the error message 
+        => this could happen because of network issues or because the user has been banned
+        => only generic message issued in either case like "Something went wrong. Please try again later."
+    8.  
+
+
+
+===================
+Overview of algorithms
+--------------------
+1. After a user signs up, they're assigned a permanent queue, implemented as a linear singly-linked list
+2. The queue's id is the 32-bit user id 
+3. Every question that's submitted is assigned a unique id and has 
+    the following format:
+    questionId: {
+                question: string,
+                timestamp: int,
+                cancelled: boolean,
+                active: boolean,
+                answered: boolean,
+                pushedToQueues: boolean, // has it been matched with SMEs and pushed to all their queues?
+                op: string (the Google- or Facebook-provided name of the user)
+                chatRoom: string (the 32-bit user id),
+                queues: [] // the queues on to which the question has been pushed
+                smes: [] // the SMEs that have thus far right swiped on the question.  
+            }
+    a. The cancelled key is only for informational purposes. If the user has 
+        cancelled their submission of the question, then values are set like so:
+            cancelled: true
+            active: false
+            answered: false
+    b. If the question has been discussed and the user has ended the chat, then 
+            cancelled: false,
+            active: false
+            answered: true 
+    c. After intial submission:
+            cancelled: false,
+            active: true
+            answered: false 
+4. After a question is submitted, matching of SMEs with the question takes place 
+    => a very involved matching algorithm is run
+            => exclude op from consideration; we don't want to match them 
+                with themselves 
+5. Select all the SMEs above a certain match confidence and push the question 
+    to the back of their queues, except the op's queue
+    => Populate the queues field of the question data structure with all the queue 
+        IDs that it's been pushed to 
+6. For each SME, push all the questions in their queue marked as active 
+    => Let the SME loop through the questions as long as the queue is not empty 
+7. If an SME swipes right on a question, call the right swipe handler
+
+
+
+Right Swipe Handler:
+---------------------
+     1. Query the DB and check the active flag of the question
+            => if the flag is set to false, then alert the client 
+                => say that the question is being answered by someone else and that they 
+                    should try again later
+                => this effectively handles race conditions where multiple SMEs swipe right 
+                    on the question 
+                => the card is placed back on the deck until the sme swipes left on it and moves 
+                    on. If they keep swiping right, just repeat the alert
+            => if the flag is set to true,
+                => set the flage to false
+                => add the sme to the sme array of the question data structure 
+                    => the array is used to keep track of who attempted to answer 
+                        the question over the lifetime of the question. We can also 
+                        do analytics on it later, like how many times people click "Next"
+                        before a question is answered, etc. 
+                => initiate the connection to the op like so:
+                    a. get the op's chat room id, which is the "op" key of the questions data structure
+                    b. make a websocket connection to op 
+                        => on op side: say "looking for sme"
+                        => on sme side: say "connecting"
+                    c. if unable to connect to op, redirect the sme back to the swipe deck
+                        => this is a corner case. If op is still waiting to connect, then 
+                            the connection should be immediate 
+                        => if op has cancelled the question and we somehow ended up in this 
+                            state, then the server should throw unable to connect error   
+    2. Corner Case: the question gets lost during transmission
+        => The deck should become empty; if this is so, call the deck handler to 
+            poll the server  
+
+Left Swipe Handler:
+--------------------
+    1. Sends the current question to the server (the whole payload)
+    2. The server-side left swipe handler pushes the question on to the queue 
+        => before pushing, the handler does "garbage collection" on the question:
+                => if the question has been answered or cancelled, removes it from the queue completely
+                => if it's in any other state, including active == false, pushes it back 
+                    on to the queue
+    3. Corner Case: the question gets lost during transmission
+        => Don't handle it, simply let the question go missing for this user 
+
+Deck Handler (No cache implementation):
+---------------
+    1. Send the queue id (sme's user id) to the server-side queue handler
+    2. The server should pop the top question from the sme's queue and send it to the client
+        => Check the flags:
+                a. if cancelled is set to true, drop the question and pop again 
+                b. if answered is set to true, same as (a)
+                c. if active is set to false, push it back on to the queue and pop the next one 
+                d. if active is true, 
+                    => set flag to false
+                    => push it back on to the queue
+                    => send the question to the client 
+                NB: This is the only place a question is actually permanently removed from a queue 
+    3. Client renders the question as a card
+    4. If the server returns null, renders the empty deck view
+    5. Corner Case: the question gets lost during transmission 
+        => set a timeout and try again until a valid question is 
+            received or the queue is actually empty
+    6. If the deck is empty, have a button that says check for new questions
+        => What this means is that there are two ways to poll the server:
+            1. componentWillMount (this is preferable over didMount if can be used)
+            2. The user "refreshes" the page by clicking on the button 
+        => This helps us avoid polling the server at a set interval to check for new 
+            questions. We don't care if there are new questions or not. If there are are,
+            then they should be loaded as the component mounts. The swipe gestures will then
+            guarantee an unbroken chain of events for going through the queue in an infinite 
+            loop manner. If there is any network error or the user is unable to access 
+            the queue for some reason, the second option would act as a catch-all fallback 
+
+=================================================================================================================
+The Matching algorithm
+--------------------------
+There are two approaches to perfoming the matching process. The first one is a 
+brute force approach and the second one is a more efficient approach.
+
+Brute Force O(N*M):
+    After OP submits a question, we run cosine similarity between the question and 
+    all the areas of interest in the kb of all the SMEs. We then pick all the SMEs 
+    exceeding a certain confidence score after boosting their relevance based on 
+    their performance metrics (these would be the user ratings they have received
+    thus far). If there are N SMEs and each of the SMEs has M kb entries, this would 
+    take O(N*M) time. 
+
+Efficient O(c*N*M):
+    Instead of looking at all the N SMEs, we would only look at a fraction of them.
+    We would achieve this by clustering the SMEs ahead of time, where each cluster 
+    would be some unlabeled topic. An SME could belong to several clusters but each 
+    of the topics in the SME's kb can only belong to one topic (ideally). 
+
+    When a user submits a question, we check which cluster it should belong to. 
+    We then take all the SMEs belonging to that cluster and push the question to 
+    their respective queues.
+
+    How many clusters?
+        We're not sure. This is especially problematic initially when there is just 
+        one user. No clustering will be performed until the bag of words of all the 
+        user KBs is enough for the clustering algorithm to actually cluster on. So there 
+        are two main challenges:
+            1. When to start clustering: depends on how many users are signed up and 
+                how big their KBs are. We can attempt to perform the clustering every
+                24 hours.
+            2. Number of clusters: do we need one cluster or 100? Once our bag of words 
+                is big enough, we can run the algorithm with variable cluster size until 
+                we find a good number. Once this has been established, we would have 
+                essentially determined all the clusters all present and future KB topics 
+                would belong to so no need to run the clustering again. Every time a new 
+                user adds a topic to their KB, we just toss that topic into its most 
+                relevant cluster in real time. 
+
+    Clustering algorithm:
+        Conventional clustering algorithms like k-means, decision tree, SVM, etc. wont' work 
+        here. Even LDA won't work because it operates on document level, not word/phrase level.
+        We don't have documents but only words and phrases. K-means and others require a sense of 
+        distance metric but we don't have that since the bag of words does not encode any 
+        information other than the words themselves. 
+
+        What we need is semantic clustering. With semantic clustering, we should be able to 
+        for topic-based clusters from bag of words. We'll use the following two 
+        algorithms:
+            1. word2vec: get a pretrained model to construct the vector representation of 
+                our kb topics 
+            2. k-means: feed the word2vec output into k-means to cluster them by similarity 
+                => As discussed before, determine K empirically. The more data we have, the 
+                better so re-run the algorithm over time until a stable number of clusters 
+                is found. 
+
+    Adding SMEs to clusters:
+        Word2Vec and K-means only operate on kb words, without any reference as to which
+        SME the word came from. After clustering is finished, do simple string matching 
+        to assign an SME to a certain cluster.
+            1. For every word in the SME's kb where clustered == false:
+                For every cluster in clusters: 
+                    => is the word in the cluster? If so, add the SME to the cluster 
+                        => data structure-wise, there should be a hash table, where the key 
+                            is the cluster id (obtained from k-means) and the value is 
+                            an array of SME IDs
+            2. After initial user sign up, every time the user inputs a word or phrase into their
+                kb, run #1
+                KB entries should have the following structure:
+                    [
+                        {
+                            "topic": string
+                            "clustered": boolean,
+                        },
+                        {
+                            "topic": string,
+                            "clustered": boolean
+                        },
+                        ...
+                    ]
+            3. If there are no existing clusters, do nothing (wait 24 hours and try again)
+
+    Match Handler (Mathching a question with SMEs): 
+    --------------
+        1. tokenize the question into words (why?) and query the k-means model and obtain a cluster id 
+        2. Using the cluster id, get all the SMEs from sme_clusters hash table 
+        3. Perform any boosting if necessary
+        4. Get the final list of SMEs and push the question on to their queues  
+            => Note that we're not modifying the question data structure in any way 
+            => modification only happens if the question is cancelled, right-swiped, or answered/retired
+        5. Each step above is atomic. Before executing the step, check that cancelled == false for the question
+            => if cancelled == true at any step, stop immediately and do nothing. 
+
+How about boosting? 
+    There won't be a need for any boosting with this approach 
+    since we're trying to give every matched SME an equal opportunity. However, 
+    we'll make use of the user ratings later on to determine how often we should
+    push a question to their queue. For example, for a 4.6-rated SME, we'll push on
+    to their queue 100% of the time. For a 1.0-rated SME, 0% of the time, and so on.
+    This way, we would be "banning" bots and abusive users while rewarding good users. 
+    The percentages will be determined empirically for each star rating, for example:
+            4.0 - 5.0: 100%
+            3.5 - 3.9: 80%
+            3.0 - 3.4: 60%
+            2.5 - 2.9: 40%
+            2.0 - 2.4: 20%
+            1.5 - 1.9: 10%
+            1.0 - 1.4: 0% 
+    How would this be implemented? 
+        We'll use the equivalent of numpy random sampling with a sample size of 
+        a million and then randomly select a float from that. If we want to determine 
+        whether or not a question should be pushed on to an SME with a rating of 
+        3.8, we do the following:
+            1. Select a random float from the array 
+            2. If the float is <= 0.8, return true, else false (3.8 falls under 3.5 - 3.9: 80%)
+                => this is because the array is uniformly distrubuted, i.e 80% of the floats
+                    lie between 0.0 and 0.8
+            
+            If rating 4.1:
+            1. return true (because 100% of the numbers lie between 0 and 1)
+
+When will this be used?
+    Once there are enough users to start worrying about bots and bad behavior 
+                
+=================================================================================================================
+
+Submission Handler:
+-------------------
+    What happens after a user submits a question:
+        1. The client sends the question data structure to the server 
+            => the data structre contains two fields ONLY: the question and user id 
+            => the entire question data structure is maintained at the server only 
+                to avoid any data consistency issues 
+        2. The server adds the question to a global hash table housing all the questions 
+            => The server creates the big question data structure introduced earlier
+                => this data structure is never sent to the client and nor is their 
+                    any need for the client to know about it
+                => this also reduces the payload of the back-and-forth transmissions 
+            => key: question id (timestamp + uid string)
+                => the client should save the question id to mob-x right away
+                => mob-x entry should be cleared if 
+                    => the user cancels the question or 
+                    => the user ends the chat, where we assume the question has been answered 
+            => value: the question data structure
+        2. The server updates the data structure with queues and other boolean fields 
+        3. The server then sends the update data structure back to the client 
+        4. The client keeps waiting until some SME right swipes it or the question is cancelled by the user 
+            => if right-swiped: right swipe handler called 
+            => if cancelled, cancellation handler called 
+            => note that if neither of the above is true, the client just keeps waiting forever
+                until one of the two things happens 
+
+Cancellation Handler:
+-------------------- 
+    If a question gets cancelled, the cancel button should do two things:
+        1. Navigate back to the home page 
+        2. Call the server side cancellation handler with the question ID 
+        3. The cancellation handler immediately sets the cancelled flag to true
+            and calls the migration handler with the question id
+        4. When the deck handler checks for the flags, it will drop any question whose
+            cancelled flag is set to true
+
+End Handler:
+-----------------------
+    0. Disconnect both the op and sme 
+    1. Call the answered handler with the name of the id of the last sme, op, and question id
+    2. The sever should set the answered flag to true and call the migration handler 
+    3. The client should request feedback and send the result to the feedback handler 
+        with the question id
+    4. Navigate back to the home page 
+    5. Update the inboxes and badge counts of both op and sme 
+        => update the mob-x store badge count by calling the server
+        => the badge count should re-render on after calling the server  
+
+Next Handler:
+-------------------
+    0. Call the setActive handler to set the active flag to true 
+    1. Disconnect the op and sme 
+        => sme: alert the disconnection and redirect to the question deck 
+        => op: request feedback and call the feedback handler 
+            => feedback handler should call onNewConnection 
+
+KB Handler:
+------------------
+    0. If there are any topics in the db for this user, return the list 
+    1. Every time a user enters a topic, call the addTopic handler  
+        => the server side new topic handler should do clustering as described
+        => also add the topic to the local array  
+    2. If a topic is removed, call the removeTopic handler 
+        => the server should undo the clustering of the SME for the topic being removed 
+        => update the local array as well 
+    3. Perform initial retrieval in componentDidMount
+
+Inbox Handler:
+-------------------
+    1. Retrieve Simi broadcast messages from the Broadcast table 
+        => no need to filter since this is for all the users 
+    2. Retrieve unicast messages from the Unicast table 
+        => filter on op id  
+    3. Retrieve chat log from the ChatLog table/document 
+        for this user by filtering on sme or op id 
+    4. Update read counts both locally and on the server 
+    5. Perform retrieval in componentDidMount (also retrieve badge count here)
+    6. Perform retrieval of the badge count in componentDidMount of App.js 
+    7. The server should perform steps 1-3 and return a sorted list to the client 
+
+ChatRoom Handler:
+--------------------
+    1. Create a new chat session id upon connected = true 
+        => the session id is the question id + the ith chat number for this question 
+            => for the first chat session for a given question id, the session id is the same as the question id
+            => for the second chat session for the same question (after op clicked "Next"),
+                increment the question id by one and so on
+    2. Store the chat session in a hash table, where the key is the session id and the value is 
+        the array of messages and associated metadata
+    3. use the session id as a key and the data array as a 
+        value to store the chat messages 
+    4. No need to store the chat locally since every message has to go 
+        through the server anyway 
+    5. isRead is set to false when saving the chat to the db 
+    6. If the chat ends, do nothing 
+        => the End Handler should take over  
+
+    
+Garbage Collection:
+--------------------
+    No garbage collection needed. All the questions are stored in a database. What 
+    we can do, however, is move answered questions to Answered table/document and 
+    cancelled questions to Cancelled table/document so that the Active questions 
+    table is as small as it can be. Note that Active questions table also 
+    includes questions where active is set to false. We only move them out of 
+    there if either the question has been cancelled or answered. 
+
+
+
+Password used to generate the Facebook key hash: PhattyAcid
+
+
+Disconnect events
+-------------------------
+1. Initiated by op:
+    => onOpDisconnect called 
+        => mode: end 
+            1. push chat log to inbox
+            2. alert sme that op has disconnected 
+            2. op leaves the chat room
+        => mode: next 
+            1. push chat log to inbox 
+            2. alert sme that op has disconnected 
+        ==> in both cases, reduce num users by one 
+2. Initiated by sme (end mode only)
+    1. Push the chat log to inbox 
+    2. alert that sme has disconnected 
+    3. sme leaves the chat room 
+    => reduce num users by one 
+
+if num users reaches zero, remove the chat room object 
+
+Actions:
+    sme presses end:
+        onSmeDisconnectCalled 
+    op presses end or next:
+        onOpDisconnectCalled
+
+    mode: end 
+        => 
+

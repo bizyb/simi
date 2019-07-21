@@ -1,0 +1,66 @@
+{
+    "global": {
+        "ok": "Ok",
+        "cancel": "Cancel",
+        "ask": "Ask",
+        "answer": "Answer",
+        "knowledgeBase": "Knowledge Base",
+        "inbox": "Inbox",
+        "and": "and"
+    },
+    "login": {
+        "googleButton": "Continue with Google",
+        "facebookButton": "Continue with Facebook",
+        "loginOptions": "Why must I login with Facebook?",
+        "tos": "Terms of Service",
+        "privacy": "Privacy Policy",
+        "disclaimer": "By continuing you indicate that you have read and agree to Simi's",
+        "sloganWelcome": "Welcome to Simi",
+        "sloganMain": "A place to ask questions and get answers in real-time"
+    },
+    "ask": {
+        "placeholder": "Ask anything...",
+        "description": "Ask anything and Simi will match you with someone who can answer it"
+    },
+    "placeholder": {
+        "text": "Your knowledge base is empty. Tap below to start adding your areas of interest and expertise."
+    },
+    "answer": {
+
+    },
+    "chat": {
+        "encryptionTitle": "End-to-End Encryption",
+        "encryptionDesc": "Messages sent or received in this chat are secured with end-to-end encryption, which means thrid parties can't read them.",
+        "placeholder": "Write a message",
+        "progressTextOPMajor": "Looking for someone you can talk to",
+        "progressTextOPMinor": "This may take some time so hang tight",
+        "progressTextSME": "Connecting...",
+        "isTyping": "Typing...",
+        "send": "Send",
+        "connected": "Connected",
+        "disconnected": "Disconnected",
+        "end": "End",
+        "next": "Next", 
+        "endChatTitle": "End Chat",
+        "endChatDesc": "Are you sure? Your connection will be terminated and you will not be able to chat with your partner again.",
+        "askAgainTitle": "Ask Again?",
+        "askAgainDesc": "Are you sure? You will be connected to a new partner.",
+        "feedbackTitle": "Feedback",
+        "feedbackDesc": "How would you rate your partner? Your feedback will help us improve quality."
+    },
+    "deck": {
+        "empty": "No new questions. Please try again later.",
+        "accept": "Accept",
+        "pass": "Pass",
+        "stale": "Question expired"
+    },
+    "inbox": {
+        "empty": "No messages yet",
+        "logoutDesc": "Are you sure?",
+        "logout": "Logout"
+    },
+    "knowledgeBase": {
+        "placeholder": "Enter one topic at a time"
+    }
+    
+}

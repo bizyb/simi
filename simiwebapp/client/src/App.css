@@ -1,0 +1,55 @@
+/*Bootstrap Overrides*/
+html {
+  font-size: 16px;
+  min-height: 100%;
+}
+
+body {
+  line-height: 22px;
+  color: #000;
+  font-size: 16px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.legal-container {
+  padding: 20px;
+  max-width: 992px;
+  margin: auto
+  
+}
+.legal-title {
+  text-align: center;
+  font-weight: 700;
+  font-size: 20px;
+  padding-top: 10px;
+  margin-bottom: 20px;
+}
+.legal-row {
+  margin-bottom: 20px;
+}
+.legal-heading {
+  font-weight: 700;
+  font-size: 18px;
+  padding-top: 15px;
+  padding-bottom: 5px;
+}
+.legal-subheading {
+  font-weight: 700;
+  font-size: 14px;
+}
+.legal-body {
+  font-size: 14px;
+}
+.legal-container p {
+  margin: 0
+}
+.legal-container li {
+  font-size: 14px;
+}
+
+#list-styling {
+  list-style-type: decimal;
+}
+.welcome {
+  text-align: center;
+}

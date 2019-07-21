@@ -1,0 +1,8 @@
+Deployment TODOs (in no particular order)
+------------------------------------------
+1. Containerize the server
+2. Get Play Store developer account (has the previous payment expired already?)
+3. Release to limited users
+4. SSL, Nginx, securing socket connection 
+5. domain name 
+6. deploy to Linode
