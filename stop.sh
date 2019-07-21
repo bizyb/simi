@@ -1,4 +1,6 @@
 docker stop client
-docker stop server
+docker stop webappserver
+docker stop mobileappserver
 docker rm client
-docker rm server
+docker rm webappserver
+docker rm mobileappserver

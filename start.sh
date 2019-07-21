@@ -1,11 +1,19 @@
 docker stop client
 docker rm client
-cd client
+cd simiwebapp/client
 docker build -t client .
-cd ..
-docker stop server
-docker rm server
-cd server
-docker build -t server .
-cd ..
+cd ../..
+
+docker stop webappserver
+docker rm webappserver
+cd simiwebapp/server
+docker build -t webappserver .
+cd ../..
+
+docker stop mobileappserver
+docker rm mobileappserver
+cd simimobileapp/server
+docker build -t mobileappserver .
+cd ../..
+
 docker-compose up -d --build

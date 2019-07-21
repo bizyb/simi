@@ -14,7 +14,7 @@ services:
     networks:
       - webappnetwork
     hostname: mongodb
-  client:
+  webappserver:
     container_name: client
     image: 'client'
     restart: always
@@ -23,27 +23,34 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./data/nginx:/etc/nginx/conf.d
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
+      - ../simiwebapp/data/nginx:/etc/nginx/conf.d
+      - ../simiwebapp/data/certbot/conf:/etc/letsencrypt
+      - ../simiwebapp/data/certbot/www:/var/www/certbot
     networks:
       - webappnetwork
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
-  server:
-    container_name: server
-    image: 'server'
+  webappserver:
+    container_name: webappserver
+    image: 'webappserver'
     restart: always
-    hostname: server
+    hostname: webappserver
     expose:
       - "5000"
+    networks:
+      - webappnetwork
+  mobileappserver:
+    container_name: mobileappserver
+    image: 'mobileappserver'
+    restart: always
+    hostname: mobileappserver
+    expose:
+      - "5001"
     networks:
       - webappnetwork
   certbot:
     image: certbot/certbot
     restart: always
     volumes:
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
+      - ../simiwebapp/data/certbot/conf:/etc/letsencrypt
+      - ../simiwebapp/data/certbot/www:/var/www/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-
-  
