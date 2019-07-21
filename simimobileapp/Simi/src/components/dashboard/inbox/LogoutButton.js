@@ -8,7 +8,7 @@ import {
     StyleSheet, 
     View,
 } from 'react-native';
-import { userIsOnline } from "../../../utils/utils";
+import  { userIsOnline } from "../../../api/endpoints";
 
 const LOGOUT_DESC = strings.inbox.logoutDesc;
 const LOGOUT = strings.inbox.logout;

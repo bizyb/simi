@@ -3,7 +3,7 @@ import {StyleSheet, View, Text, TextInput, KeyboardAvoidingView} from 'react-nat
 import Logo from '../../login/Logo';
 import strings from "../../../assets/en/json/strings.json";
 import {observer, inject} from 'mobx-react';
-import  { request, join } from "../../../api/api";
+import  { request, join, userIsOnline } from "../../../api/api";
 import { DEBUG } from "../../../../settings";
 
 let PLACEHOLDER =  strings.ask.placeholder; 
@@ -18,6 +18,10 @@ export default class QuestionInput extends Component<Props> {
     focusListener = this.props.navigation.addListener("didFocus", () => {
         // The screen is focused
         this.qStore.formattedUserCount = this.formattedUserCount()
+        userIsOnline(this.sessionStore.userId, 
+            this.sessionStore.endpoints.user, 
+            this.sessionStore.endpoints.methods.post,
+            isOnline=true)
         this.usersOnline()
     })
 

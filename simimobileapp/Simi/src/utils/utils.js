@@ -16,18 +16,3 @@ export function getDate(_for, date) {
         return moment(date).format('MMMM Do YYYY')
     }
 }
-
-/**
- * Let the server know that the user is online.
- */
-export function userIsOnline(userId, endpoint, method, isOnline=false) {
-    let data = {
-        userId: userId,
-        isOnline: isOnline
-    }
-    request(data, endpoint, method).then((result) => {
-        DEBUG && console.log(result)
-    }).catch((err)=> {
-        DEBUG && console.log(err)
-    })
-}

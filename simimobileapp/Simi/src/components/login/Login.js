@@ -15,6 +15,7 @@ import {
     privacyUrl, 
     ToSUrl,
     request,
+    userIsOnline
 } from "../../api/api";
 import endpoints from "../../api/endpoints";
 import { 
@@ -25,7 +26,6 @@ import {
 import {observer,inject} from 'mobx-react';
 import io from 'socket.io-client';
 import { DEBUG } from "../../../settings";
-import { userIsOnline } from "../../utils/utils";
 
 let FACEBOOK_TEXT = strings.login.facebookButton;
 let FACEBOOK_PROVIDER = "Facebook";

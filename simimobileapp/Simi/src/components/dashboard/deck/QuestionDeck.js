@@ -13,7 +13,7 @@ import CardStack from './CardStack';
 import CommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import strings from "../../../assets/en/json/strings.json";
 import {observer,inject} from 'mobx-react';
-import { request, join } from "../../../api/api";
+import { request, join, userIsOnline } from "../../../api/api";
 import { DEBUG } from "../../../../settings";
 import StaleQuestion from './StaleQuestion';
 
@@ -34,6 +34,10 @@ export default class QuestionDeck extends Component<Props> {
     focusListener = this.props.navigation.addListener("didFocus", () => {
       // The screen is focused
       this.onSwipeDeck()
+      userIsOnline(this.sessionStore.userId, 
+        this.sessionStore.endpoints.user, 
+        this.sessionStore.endpoints.methods.post,
+        isOnline=true)
     })
 
 

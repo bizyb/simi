@@ -199,22 +199,13 @@ export default class App extends Component<Props> {
 
 
   _handleAppStateChange = (nextAppState) => {
-    if (nextAppState == "active" && this.sessionStore.isPopulated) {
-      // if session data has already been populated, then the user
-      // is bringing the app to the foreground so set isOnline status. 
-      userIsOnline(this.sessionStore.userId, 
-        this.sessionStore.endpoints.user, 
-        this.sessionStore.endpoints.methods.post)
-
-    } else {
-      // cleanup if we have logged in user and populated endpoints
+    if (nextAppState != "active") {
+      DEBUG && console.log("App state: ", nextAppState)
       try {
-        if (this.sessionStore.userId) { this.cleanup() } 
+        this.cleanup()
       } catch(err) {
         DEBUG && console.log(err)
       }
-      
-      
     }
   }
   

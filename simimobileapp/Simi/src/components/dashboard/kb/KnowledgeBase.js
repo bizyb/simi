@@ -8,7 +8,7 @@ import PlaceHolder from './Placeholder';
 import TopicInput from './TopicInput';
 import {observer,inject} from 'mobx-react';
 import strings from "../../../assets/en/json/strings.json";
-import  { request } from "../../../api/api";
+import  { request, userIsOnline } from "../../../api/api";
 import { DEBUG } from "../../../../settings";
 import endpoints from "../../../api/endpoints";
 
@@ -31,7 +31,13 @@ export default class KnowledgeBase extends Component<Props> {
   // all the necessary data for populating the inbox and the KB and save it to a 
   kbStore = this.props.rootStore.knowledgeBaseStore
   sessionStore = this.props.rootStore.sessionStore
- 
+  focusListener = this.props.navigation.addListener("didFocus", () => {
+    // The screen is focused
+    userIsOnline(this.sessionStore.userId, 
+      this.sessionStore.endpoints.user, 
+      this.sessionStore.endpoints.methods.post,
+      isOnline=true)
+  })
  
   componentDidMount() {
     this.kbStore.textInputRef = "topicInput"

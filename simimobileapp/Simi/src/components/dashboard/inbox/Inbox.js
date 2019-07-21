@@ -4,7 +4,7 @@ import globalStyles from "../../../assets/js/Styles";
 import InboxItem from './InboxItem';
 import strings from "../../../assets/en/json/strings.json";
 import {observer,inject} from 'mobx-react';
-import { request } from "../../../api/api";
+import { request, userIsOnline } from "../../../api/api";
 import { DEBUG } from "../../../../settings";
 import LogoutButton from './LogoutButton';
 import CircularButton from '../../buttons/CircularButton';
@@ -24,6 +24,13 @@ export default class Inbox extends Component<Props> {
   static navigationOptions = {
     header: null,
   }
+  focusListener = this.props.navigation.addListener("didFocus", () => {
+    // The screen is focused
+    userIsOnline(this.sessionStore.userId, 
+      this.sessionStore.endpoints.user, 
+      this.sessionStore.endpoints.methods.post,
+      isOnline=true)
+  })
 
   componentDidMount() {
     this.cmlStore.chatId = ""

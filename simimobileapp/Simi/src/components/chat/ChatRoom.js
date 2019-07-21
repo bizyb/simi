@@ -11,7 +11,7 @@ import ChatTopBar from './ChatTopBar';
 import ChatMessageList from './ChatMessageList';
 import ChatMessageInput from './ChatMessageInput';
 import strings from "../../assets/en/json/strings.json";
-import { request } from "../../api/api";
+import { request, userIsOnline } from "../../api/api";
 import {observer, inject} from 'mobx-react';
 import { DEBUG } from "../../../settings";
 import shortid from "shortid";
@@ -32,10 +32,13 @@ export default class ChatRoom extends Component<Props> {
   qStore = this.props.rootStore.questionStore
   sessionStore = this.props.rootStore.sessionStore
   
-  // focusListener = this.props.navigation.addListener("didFocus", () => {
-  //   // The screen is focused
-  //   this.redirectHome()
-  // })
+  focusListener = this.props.navigation.addListener("didFocus", () => {
+    // The screen is focused
+    userIsOnline(this.sessionStore.userId, 
+      this.sessionStore.endpoints.user, 
+      this.sessionStore.endpoints.methods.post,
+      isOnline=true)
+  })
   
   static navigationOptions = {
     header: null,
@@ -148,7 +151,7 @@ onLeave = () => {
  * emit the preamble.
  */
 onNewConnection = () => {
-  DEBUG && console.log("Socket events: ", this.sessionStore.events)
+  // DEBUG && console.log("Socket events: ", this.sessionStore.events)
   let newData = []
   let keys = {}
   let preamble = {
