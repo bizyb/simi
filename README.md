@@ -35,9 +35,9 @@ machine is new:
 ---
 
 Nginx conf file, named app.conf, is setup to serve:
-⋅⋅* ReactJS web client (at /)
-⋅⋅* NodeJS web server (reverse proxy at /web/)
-⋅⋅* NodeJS app server (reverse proxy at /mobile/)
+- ReactJS web client (at /)
+- NodeJS web server (reverse proxy at /web/)
+- NodeJS app server (reverse proxy at /mobile/)
 
 app.conf is configured to load the SSL certifcate and keys automatically from the
 mounted volume. In addition, it's docker-compose command is setup to check for updated 
@@ -49,30 +49,21 @@ key files every six hours.
 
 Simi is micro-service based. Each micro-service is containerized and here's a list of 
 all the containers:
-⋅⋅* mongodb
-⋅⋅⋅ Runs on its default port number, 27017. Data store is mounted from /data/db
-⋅⋅* certbot
-⋅⋅⋅ Always up and running but issues certificate renewal request once a week. It loads 
+- mongodb
+    Runs on its default port number, 27017. Data store is mounted from /data/db
+- certbot
+    Always up and running but issues certificate renewal request once a week. It loads 
 it's data from ./data. Note that this is not the same as /data.  
-⋅⋅* ReactJS + Nginx 
-⋅⋅⋅ The react app is just static js, css, and html files. Nginx acts as a static file
+- ReactJS + Nginx 
+    The react app is just static js, css, and html files. Nginx acts as a static file
 server here. 
-⋅⋅* NodeJS web server on port 5000
-⋅⋅⋅ This is the gateway server. It's used primarily for service Privacy Policy and Terms of
-Service. It's also setup with a REST endpoint to retrieve the current mobile endpoint. 
-At the moment, the mobile endpoint is hard-coded into the app. However, in the future, 
-we might need to move it around a bit. When that happens, the mobile endpoint will change. 
-The gateway server is designed to be very light-weight so it may not be able to handle 
-the load if we use it as a full proxy. Instead, the endpoint would be requested once
-per app install. 
+- NodeJS web server on port 5000
+    This is the gateway server. It's used primarily for service Privacy Policy and Terms of Service. It's also setup with a REST endpoint to retrieve the current mobile endpoint. At the moment, the mobile endpoint is hard-coded into the app. However, in the future, we might need to move it around a bit. When that happens, the mobile endpoint will change. The gateway server is designed to be very light-weight so it may not be able to handle the load if we use it as a full proxy. Instead, the endpoint would be requested once per app install. 
 
-⋅⋅⋅ The gateway server is also host the landing page for the app in the future and 
-the dashboard for interacting with the mobile server. This dashboard will allow us
-to perform analytics, send messages to users, etc. the scaffolding is there but 
-there's no imperative for it at the moment so we'll keep it in the backburners. 
+    The gateway server is also host the landing page for the app in the future and the dashboard for interacting with the mobile server. This dashboard will allow us to perform analytics, send messages to users, etc. the scaffolding is there but there's no imperative for it at the moment so we'll keep it in the backburners. 
 
-⋅⋅* NodeJS mobile server on port 5001
-⋅⋅⋅ This is *the* endpoint of the app. It handles real-time chat and all other good 
+- NodeJS mobile server on port 5001
+    This is *the* endpoint of the app. It handles real-time chat and all other good 
 stuff. Right now it's implemented asynchronously without any blocking operations. 
 However, it's primarily implemented as a proof-of-concept for future implementation 
 in Phoenix+Elixir. Until then, it should be resilient enough to handle a reasonable 
@@ -93,13 +84,16 @@ docker-compose.
 
 # Deployment
 ---
-⋅⋅* Dev 
-⋅⋅⋅ Enable DEBUG mode by going into simiwebapp/server/utils for the gateway server, 
-simimobileapp/server/settings for the mobile server, and simimobileapp/Simi/src/utils/utils 
-for the mobile app. This will enable console logs. 
+- Dev 
+    Enable DEBUG mode by going into:
+    - simiwebapp/server/utils for the gateway server, 
+    - simimobileapp/server/settings for the mobile server 
+    - simimobileapp/Simi/src/utils/utils for the mobile app. 
+    
+    This will enable console logs. 
 
-⋅⋅* Production 
-⋅⋅⋅ Set DEBUG to false by going to the indicated files. 
+- Production 
+    Set DEBUG to false by going to the indicated files. 
 
 ### Build 
 Inside the /simi directory, issue ./start.sh. This will build the necessary 
@@ -117,5 +111,6 @@ To login into the dashboard, use the username *bmelesse* and password *IDfc6FQ_F
 This user is automatically created.
 
 # TODO 
-⋅⋅* supervisord/k8 to manage the containers 
-⋅⋅* secure endpoints where user login status check isn't already being done
+- [x] Deploy for beta testing
+- [ ] supervisord/k8 to manage the containers 
+- [ ] secure endpoints where user login status check isn't already being done

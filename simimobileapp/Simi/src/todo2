@@ -1,5 +1,4 @@
 IGNORE (unable to reproduce) 2. user isOnline update network error 
 IGNORE (unable to reproduce) 5. Memory leak issue on async update when going from ask page to chat room
 IGNORE 6. Why is the transition from the swipe deck to the chat room slow?
-8. privacy and tos; also embed the links in legal.json
 
