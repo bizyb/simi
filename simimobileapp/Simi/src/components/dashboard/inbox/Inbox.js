@@ -34,6 +34,26 @@ export default class Inbox extends Component<Props> {
 
   componentDidMount() {
     this.cmlStore.chatId = ""
+    this.downloadInboxMessages()
+  }
+
+  /**
+   * Download inbox messages upon component mount instead of navigation 
+   * focus; If there are a lot of messages and we query the server every
+   * time Inbox comes into focus, it's gonna slow down the app and strain
+   * the server.
+   */
+  downloadInboxMessages = () => {
+    let data = {
+      userId: this.sessionStore.userId
+    }
+    request(data, this.sessionStore.endpoints.inbox, this.sessionStore.endpoints.methods.get).then((result) => {
+      DEBUG && console.log("Inbox messages retrieved: ", result.data.length)
+      this.iStore.data = result.data
+    }).catch((err) => {
+        DEBUG && console.log(err)
+    })
+    
   }
 
   /**
