@@ -207,8 +207,13 @@ export default class App extends Component<Props> {
         this.sessionStore.endpoints.methods.post)
 
     } else {
-      // cleanup if we have logged in user
-      if (this.sessionStore.userId) { this.cleanup() } 
+      // cleanup if we have logged in user and populated endpoints
+      try {
+        if (this.sessionStore.userId) { this.cleanup() } 
+      } catch(err) {
+        DEBUG && console.log(err)
+      }
+      
       
     }
   }

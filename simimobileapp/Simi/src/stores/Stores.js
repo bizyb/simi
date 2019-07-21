@@ -115,5 +115,7 @@ export class SessionStore {
     @observable firstName           = null
     @observable isSme               = false 
     @observable isOp                = false
+    @observable downloadComplete    = false
+    @observable downloadError       = false
     @observable chatPartner         = {}
 }

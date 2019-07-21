@@ -9,6 +9,7 @@
         "and": "and"
     },
     "login": {
+        "errorMessage": "Sorry, something went wrong",
         "googleButton": "Continue with Google",
         "facebookButton": "Continue with Facebook",
         "loginOptions": "Why must I login with Facebook?",

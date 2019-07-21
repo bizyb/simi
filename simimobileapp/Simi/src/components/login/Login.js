@@ -3,6 +3,7 @@ import {
     StyleSheet, 
     View, 
     Text,
+    ActivityIndicator,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import Logo from './Logo';
@@ -28,6 +29,7 @@ import { userIsOnline } from "../../utils/utils";
 
 let FACEBOOK_TEXT = strings.login.facebookButton;
 let FACEBOOK_PROVIDER = "Facebook";
+let ERR_MESSAGE = strings.login.errorMessage
 
 @inject('rootStore')
 @observer
@@ -54,12 +56,14 @@ export default class Login extends Component {
         }).catch((err) => {
             DEBUG && console.log(err)
         })
+        
     }
 
     /**
      * Query the server and prepopulate all the relevant screens
      */
     download = () => {
+        this.sessionStore.downloadComplete = false
         let data = {
             userId: this.sessionStore.userId,
           }
@@ -71,6 +75,8 @@ export default class Login extends Component {
             this.sessionStore.isNewUser     = result.isNewUser
             this.sessionStore.events        = result.events 
             this.sessionStore.endpoints     = result.endpoints
+            this.sessionStore.downloadComplete = true
+            this.sessionStore.downloadError    = false
             userIsOnline(this.sessionStore.userId, 
                             this.sessionStore.endpoints.user, 
                             this.sessionStore.endpoints.methods.post)
@@ -78,18 +84,23 @@ export default class Login extends Component {
             this.props.navigation.navigate('Home')
           }).catch((err) => {
             DEBUG && console.log(err)
+            this.sessionStore.downloadError = true
           })
         
     }
+
+    
 
     /**
      * Open a socket connection and setup listeners for the indicated 
      * actions.
      */
     initSocket = () => {
+        DEBUG && console.log("Attempting to init socket connection to: ", this.sessionStore.endpoints.root)
         this.sessionStore.socket =  io.connect(this.sessionStore.endpoints.root)
         
         this.sessionStore.socket.on(this.sessionStore.events.connect, () => {
+            DEBUG && console.log("Socket connection made")
             let data = {
                 userId: this.sessionStore.userId
             }
@@ -97,7 +108,7 @@ export default class Login extends Component {
 
             // Set a listener for reconnect event
             this.sessionStore.socket.on(this.sessionStore.events.reconnect, () => {
-                //pass
+                DEBUG && console.log("Socket reconnected")
             })
         })   
     }
@@ -182,14 +193,36 @@ export default class Login extends Component {
             })
         }
     }
+    renderDownloadProgress = () => {
+        if (this.sessionStore.downloadComplete) { return null}
+        else {
+            if (this.sessionStore.downloadError) {
+                return (
+                    <View style={styles.indicator}>
+                        <ActivityIndicator color="tomato" size="large" animating={false}/>
+                        <Text style={styles.downloadError}>{ERR_MESSAGE}</Text>
+                    </View>
+                )
+            } else {
+                return (
+                    <View style={styles.indicator}>
+                    <ActivityIndicator color="tomato" size="large"/>
+                </View>
+                )
+            } 
+        }
+    }
+
     render() {
         // If AsyncStorage hasn't returned yet, then just show a blank screen
         // This is better than flashing the login screen and then navigating 
         // to Home if userId has been found
       return (
-          <View style={{flex: 1}}>{!this.sessionStore.asyncHasReturned && null
+          <View style={{flex: 1}}>
+          {!this.sessionStore.downloadComplete
+            && this.renderDownloadProgress()
           }
-          {this.sessionStore.asyncHasReturned && !this.sessionStore.userId &&
+          {this.sessionStore.asyncHasReturned && this.sessionStore.downloadComplete &&
           <View style={styles.container}>
                 <View style={styles.logoContainer}>
                     <Logo/>
@@ -207,6 +240,7 @@ export default class Login extends Component {
                 <View style={styles.legalContainer}>
                     <LegalDisclaimer loadPrivacy={this.loadPrivacy} loadToS={this.loadToS}/>
                 </View>
+               
           </View> 
           }
           </View>
@@ -249,7 +283,15 @@ export default class Login extends Component {
         color: 'grey',
         fontSize: 12,
 
-    }
+    },
+    indicator: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      downloadError: {
+          paddingTop: 15,
+      }
   });
 
   
