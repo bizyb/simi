@@ -123,8 +123,10 @@ export default class ChatMessageList extends Component<Props> {
       }
     }
     render() {
+      let padding = {}
+      if (!this.props.isChatRoom) { padding = {paddingBottom: 50}}
       return (
-              <View style={[styles.messageList,{height: this.props.height}] }>
+              <View style={[styles.messageList,{height: this.props.height}, padding] }>
                 {this.renderFlatList()}
                 {this.renderEncryptionMsgDialog()}
             </View>

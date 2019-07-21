@@ -47,7 +47,6 @@ export default class Login extends Component {
         this.getUserId()
         
     }
-    
     getUserId = async () => {
         let value = await AsyncStorage.getItem('userId')
         if (value) {
