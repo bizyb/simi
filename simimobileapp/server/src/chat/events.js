@@ -124,7 +124,7 @@ const _onJoinHelper = (roomId, data, socket, questionId, update=false) => {
 const onJoin = (data, socket) => {
     let questionId = data.questionId
     let query = { roomId: data.roomId }
-    settings.DEBUG && console.log("Atteppting to join with data: ", data)
+    settings.DEBUG && console.log("Attempting to join with data: ", data)
     dbApi.find(dbApi.collections.chatRoom, query).then((result) => {
         if (result.length == 0) {
             // create a new chat room record 
@@ -334,9 +334,11 @@ const eventHandler = (socket) => {
      * Later, userId is used in cleanup on disconnect.
      */
     socket.on(endpoints.socket.onUserId, (data) => {
-        socket["userId"] = data.userId
+            settings.DEBUG("User Id set for socket with id: ", socket.id)
+	    socket["userId"] = data.userId
     })
     socket.on(endpoints.socket.join, (data) => {
+	    settings.DEBUG("onJoin listener set")
         onJoin(data, socket)  
     })
 

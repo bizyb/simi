@@ -23,9 +23,9 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - /home/simi/simi/simiwebapp/data/nginx:/etc/nginx/conf.d
-      - /home/simi/simi/simiwebapp/data/certbot/conf:/etc/letsencrypt
-      - /home/simi/simi/simiwebapp/data/certbot/www:/var/www/certbot
+      - /home/simi/nginx-certbot/data/nginx:/etc/nginx/conf.d
+      - /home/simi/nginx-certbot/data/certbot/conf:/etc/letsencrypt
+      - /home/simi/nginx-certbot/data/certbot/www:/var/www/certbot
     networks:
       - webappnetwork
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
@@ -51,6 +51,6 @@ services:
     image: certbot/certbot
     restart: always
     volumes:
-      - /home/simi/simi/simiwebapp/data/certbot/conf:/etc/letsencrypt
-      - /home/simi/simi/simiwebapp/data/certbot/www:/var/www/certbot
+      - /home/simi/nginx-certbot/data/certbot/conf:/etc/letsencrypt
+      - /home/simi/nginx-certbot/data/certbot/www:/var/www/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
