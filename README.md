@@ -12,10 +12,7 @@ for older distributions.
 
 # SSL
 ---
-Simi uses Let's Encrypt for SSL certificate signing. Let's Encrypt's certificates are 
-valid for 90 days so they need to be renewed at least 30 days before the expiration. 
-Although setting up Let's Encrypt and auto-renewing is complicated, we have a script 
-(thanks to @wmnnd) that automates the process. 
+Simi uses Let's Encrypt for SSL certificate signing. Let's Encrypt's certificates are valid for 90 days so they need to be renewed at least 30 days before the expiration. Although setting up Let's Encrypt and auto-renewing is complicated, we have a script (thanks to @wmnnd) that automates the process. 
 
 @wmnnd's script uses Certbot, which needs to verify server/domain ownership before 
 issuing any certificates. Domain name ownership needs to be verified just once. We
@@ -50,24 +47,23 @@ key files every six hours.
 Simi is micro-service based. Each micro-service is containerized and here's a list of 
 all the containers:
 - mongodb
+
     Runs on its default port number, 27017. Data store is mounted from /data/db
 - certbot
-    Always up and running but issues certificate renewal request once a week. It loads 
-it's data from ./data. Note that this is not the same as /data.  
+
+    Always up and running but issues certificate renewal request once a week. It loads it's data from ./data. Note that this is not the same as /data.  
 - ReactJS + Nginx 
-    The react app is just static js, css, and html files. Nginx acts as a static file
-server here. 
+
+    The react app is just static js, css, and html files. Nginx acts as a static file server here. 
 - NodeJS web server on port 5000
+
     This is the gateway server. It's used primarily for service Privacy Policy and Terms of Service. It's also setup with a REST endpoint to retrieve the current mobile endpoint. At the moment, the mobile endpoint is hard-coded into the app. However, in the future, we might need to move it around a bit. When that happens, the mobile endpoint will change. The gateway server is designed to be very light-weight so it may not be able to handle the load if we use it as a full proxy. Instead, the endpoint would be requested once per app install. 
 
     The gateway server is also host the landing page for the app in the future and the dashboard for interacting with the mobile server. This dashboard will allow us to perform analytics, send messages to users, etc. the scaffolding is there but there's no imperative for it at the moment so we'll keep it in the backburners. 
 
 - NodeJS mobile server on port 5001
-    This is *the* endpoint of the app. It handles real-time chat and all other good 
-stuff. Right now it's implemented asynchronously without any blocking operations. 
-However, it's primarily implemented as a proof-of-concept for future implementation 
-in Phoenix+Elixir. Until then, it should be resilient enough to handle a reasonable 
-amount of load, e.g. a few thousand conconcurrent connections.
+
+    This is *the* endpoint of the app. It handles real-time chat and all other good stuff. Right now it's implemented asynchronously without any blocking operations. However, it's primarily implemented as a proof-of-concept for future implementation in Phoenix+Elixir. Until then, it should be resilient enough to handle a reasonable amount of load, e.g. a few thousand conconcurrent connections.
 
 # Container security
 The docker-compose file is written so as not to publicly expose internal port 
@@ -84,7 +80,8 @@ docker-compose.
 
 # Deployment
 ---
-- Dev 
+- Dev
+
     Enable DEBUG mode by going into:
     - simiwebapp/server/utils for the gateway server, 
     - simimobileapp/server/settings for the mobile server 
@@ -92,7 +89,8 @@ docker-compose.
     
     This will enable console logs. 
 
-- Production 
+- Production
+
     Set DEBUG to false by going to the indicated files. 
 
 ### Build 
