@@ -24,7 +24,9 @@ import io from 'socket.io-client';
 import { DEBUG } from "../../../settings";
 
 let FACEBOOK_TEXT = strings.login.facebookButton;
-let FACEBOOK_PROVIDER = "Facebook";
+let GOOGLE_TEXT = strings.login.googleButton;
+let FACEBOOK_PROVIDER = strings.login.facebookProvider;
+let GOOGLE_PROVIDER = strings.login.googleProvider;
 let ERR_MESSAGE = strings.login.errorMessage
 
 @inject('rootStore')
@@ -178,6 +180,12 @@ export default class Login extends Component {
                             container={styles.facebookContainer} 
                             text={FACEBOOK_TEXT}
                             onPress = {() => auth(FACEBOOK_PROVIDER, this.setUserInfo)}/>
+                    
+                    <OvalButton 
+                            provider={"google"}
+                            container={styles.googleContainer} 
+                            text={GOOGLE_TEXT}
+                            onPress = {() => auth(GOOGLE_PROVIDER, this.setUserInfo)}/>
                 </View>
                 <View style={styles.legalContainer}>
                     <LegalDisclaimer loadPrivacy={this.loadPrivacy} loadToS={this.loadToS}/>
@@ -208,11 +216,12 @@ export default class Login extends Component {
         marginTop: -50,
       },
     googleContainer: {
-        marginBottom: 15,
+       
         alignItems: 'center',
         justifyContent: 'flex-start',
     },
     facebookContainer: {
+        marginBottom: 20,
         alignItems: 'center',
         justifyContent: 'flex-start',
     },

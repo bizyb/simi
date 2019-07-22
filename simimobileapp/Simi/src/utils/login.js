@@ -7,13 +7,12 @@ import {
     AccessToken,
     GraphRequest,
     GraphRequestManager } from "react-native-fbsdk";
-let FACEBOOK_PROVIDER = "Facebook";
+import strings from "../assets/en/json/strings.json"; 
+let FACEBOOK_PROVIDER = strings.login.facebookProvider;
+let GOOGLE_PROVIDER = strings.login.googleProvider;
 let reactCallback = null // bad idea but no other way
 
 const FBLoginCallback = async (error, result) => {
-    // console.log("=================fb error: ", error)
-    // console.log("=================fb result: ", result)
-    // console.log("=================fb callback: ", callback)
     if (error) {
       DEBUG && console.log("Error encountered with login")
       DEBUG && console.log(error)
@@ -29,7 +28,6 @@ const FBLoginCallback = async (error, result) => {
         request(userData, endpoints.login, endpoints.methods.post).then((newRes) => {
             userData.userId = newRes.userId
             reactCallback(userData)
-            // this.setUserInfo(userData)
         }).catch((err) => {
             DEBUG && console.log(err)
         })

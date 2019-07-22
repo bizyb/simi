@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "708370716084",
+    "firebase_url": "https://simi-chat.firebaseio.com",
+    "project_id": "simi-chat",
+    "storage_bucket": "simi-chat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:708370716084:android:6ee5160ec815fa85",
+        "android_client_info": {
+          "package_name": "com.simi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "708370716084-opc5ijvrckqiath35foe4esdu012oqa7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.simi",
+            "certificate_hash": "707042412d8fe791435136a72d510002b2912209"
+          }
+        },
+        {
+          "client_id": "708370716084-a3r72eauq05pehoba7sdvagdpa8td6dn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXXeDscoOMOc2OCHhPKmapXxktLC9ptWE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "708370716084-a3r72eauq05pehoba7sdvagdpa8td6dn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

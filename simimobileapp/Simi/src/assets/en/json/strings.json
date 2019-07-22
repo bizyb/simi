@@ -9,6 +9,8 @@
         "and": "and"
     },
     "login": {
+        "facebookProvider": "Facebook",
+        "googleProvider": "Google",
         "errorMessage": "Sorry, something went wrong",
         "googleButton": "Continue with Google",
         "facebookButton": "Continue with Facebook",
