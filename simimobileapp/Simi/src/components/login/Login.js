@@ -18,11 +18,7 @@ import {
     userIsOnline
 } from "../../api/api";
 import endpoints from "../../api/endpoints";
-import { 
-    LoginManager,
-    AccessToken,
-    GraphRequest,
-    GraphRequestManager } from "react-native-fbsdk";
+import { auth } from "../../utils/login";
 import {observer,inject} from 'mobx-react';
 import io from 'socket.io-client';
 import { DEBUG } from "../../../settings";
@@ -54,7 +50,6 @@ export default class Login extends Component {
             this.setFirstName()
             this.download()
         } 
-
     }
 
     /**
@@ -121,52 +116,17 @@ export default class Login extends Component {
     setFirstName = async () => {
         this.sessionStore.firstName = await AsyncStorage.getItem("first_name")
     }    
-    async FBGraphRequest(fields, callback) {
-        const accessData = await AccessToken.getCurrentAccessToken();
-
-        // Create a graph request asking for user information
-        const infoRequest = new GraphRequest('/me', {
-          accessToken: accessData.accessToken,
-          parameters: {
-            fields: {
-              string: fields
-            }
-          }
-        }, callback.bind(this));
-        // Execute the graph request created above
-        new GraphRequestManager().addRequest(infoRequest).start();
-      }
     
-      async FBLoginCallback(error, result) {
-        if (error) {
-          DEBUG && console.log("Error encountered with login")
-          DEBUG && console.log(error)
-        } else {
-          // Retrieve and save user details
-            let userData = {
-                facebookId: result.id,
-                picture: result.picture.data.url, 
-                email: result.email,
-                last_name: result.last_name, 
-                first_name: result.first_name,
-            }
-            request(userData, endpoints.login, endpoints.methods.post).then((newRes) => {
-                this.setUserInfo(userData, newRes.userId)
-            }).catch((err) => {
-                DEBUG && console.log(err)
-            })
-        }
-      }
-   
     /*
       Save user info to device 
      */
-    setUserInfo = async (userData, userId) => {
-        this.sessionStore.userId = userId
+    setUserInfo = async (userData) => {
+        DEBUG && console.log("Setting user information after auth login:", userData)
+        this.sessionStore.userId = userData.userId
         await AsyncStorage.setItem('picture', userData.picture)
         await AsyncStorage.setItem('last_name', userData.last_name)
         await AsyncStorage.setItem('first_name', userData.first_name)
-        await AsyncStorage.setItem('userId', userId)
+        await AsyncStorage.setItem('userId', userData.userId)
         this.download() 
     }
 
@@ -178,21 +138,6 @@ export default class Login extends Component {
     this.props.navigation.navigate('WebView', {"url": ToSUrl()})
     }
 
-
-    auth = (provider) => {
-        if (provider == FACEBOOK_PROVIDER) {
-            LoginManager.logInWithPermissions(["public_profile", "email"]).then((result)=> {
-                if (result.isCancelled) {
-                    DEBUG && console.log("Login was cancelled")
-                } else {
-                    let fields = "first_name, last_name, email, picture.type(large)"
-                    this.FBGraphRequest(fields, this.FBLoginCallback)
-                }
-            }, (err) => {
-                DEBUG && console.log("Error occurred: ", err)
-            })
-        }
-    }
     renderDownloadProgress = () => {
         if (this.sessionStore.downloadComplete) { return null}
         else {
@@ -232,7 +177,7 @@ export default class Login extends Component {
                             provider={"facebook"}
                             container={styles.facebookContainer} 
                             text={FACEBOOK_TEXT}
-                            onPress = {() => this.auth(FACEBOOK_PROVIDER)}/>
+                            onPress = {() => auth(FACEBOOK_PROVIDER, this.setUserInfo)}/>
                 </View>
                 <View style={styles.legalContainer}>
                     <LegalDisclaimer loadPrivacy={this.loadPrivacy} loadToS={this.loadToS}/>
