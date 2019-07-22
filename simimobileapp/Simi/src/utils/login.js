@@ -7,6 +7,11 @@ import {
     AccessToken,
     GraphRequest,
     GraphRequestManager } from "react-native-fbsdk";
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from 'react-native-google-signin';
 import strings from "../assets/en/json/strings.json"; 
 let FACEBOOK_PROVIDER = strings.login.facebookProvider;
 let GOOGLE_PROVIDER = strings.login.googleProvider;
@@ -50,7 +55,30 @@ const FBGraphRequest = async (fields, callback) => {
     new GraphRequestManager().addRequest(infoRequest).start();
   }
 
-
+  const _signIn = async () => {
+    //Prompts a modal to let the user sign in into your application.
+    try {
+      await GoogleSignin.hasPlayServices({
+        //Check if device has Google Play Services installed.
+        //Always resolves to true on iOS.
+        showPlayServicesUpdateDialog: true,
+      });
+      const userInfo = await GoogleSignin.signIn();
+      console.log('User Info --> ', userInfo);
+      this.setState({ userInfo: userInfo });
+    } catch (error) {
+      console.log('Message', error.message);
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        console.log('User Cancelled the Login Flow');
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        console.log('Signing In');
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        console.log('Play Services Not Available or Outdated');
+      } else {
+        console.log('Some Other Error Happened');
+      }
+    }
+  };
 export function auth(provider, callback)  {
     reactCallback = callback
     if (provider == FACEBOOK_PROVIDER) {
@@ -64,5 +92,7 @@ export function auth(provider, callback)  {
         }, (err) => {
             DEBUG && console.log("Error occurred: ", err)
         })
+    } else if (provider == GOOGLE_PROVIDER) {
+        _signIn()
     }
 }
