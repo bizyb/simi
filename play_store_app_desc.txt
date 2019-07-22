@@ -51,11 +51,8 @@ Absolutely! Simi uses industry-standard encryption techniques to secure all conv
 
 Is it Anonymous?
 -----------------
-Simi is semi-anonymous. Your questions are posted anonymously but when you start a conversation with someone, your first name and your profile picture are shown to your partner.
+Simi is semi-anonymous. Your questions are posted anonymously but when you start a conversation with someone, your first name and your profile picture (if available) are shown to your partner.
 
-Is Simi a Dating App?
----------------------
-Simi is not a dating app and attempting to use it in such a way would be in violation of our Terms of Service. Please keep Simi clean and help us build a family-friendly community. 
 
 Contacting Us
 -------------------
