@@ -2,6 +2,42 @@ const dbApi = require("../utils/db")
 const settings = require("../../settings")
 
 /**
+ * Log swipe count
+ */
+const swipeLog = (values) => {
+    let query = {
+        $inc: values,
+    }
+    settings.DEBUG && console.log("Swipe log to be updated with query: ", query)
+    dbApi.update(dbApi.collections.swipe, query).then((result) => {
+        settings.DEBUG && console.log("Swipe log updated: ", result)
+        // if (result.length == 0) {
+        //     query = {
+        //         leftSwipeCount: 0,
+        //         rightSwipeCount: 0,
+        //         rightSwipeSuccessCount: 0,
+        //     }
+        //     dbApi.insert(dbApi.collections.swipe, query).then((result) => {
+        //         settings.DEBUG && console.log("New swipe log created")
+        //     }).catch((err) => {
+        //         settings.DEBUG && console.log(err)
+        //     })
+        // } else {
+        //     query = result[0]
+        //     query[field] = query[field] + 1
+        //     settings.DEBUG && console.log("Swipe log to be updated with query: ", query)
+        //     dbApi.update(dbApi.collections.swipe, query).then((result) => {
+        //         settings.DEBUG && console.log("Swipe log updated: ", result)
+        //     }).catch((err) => {
+        //         settings.DEBUG && console.log(err)
+        //     })  
+        // }
+    }).catch((err) => {
+        settings.DEBUG && console.log(err)
+    })   
+}
+
+/**
  * Log user activity. If an activity is locked, then create a new one.
  * Otherwise, update the unlocked activity and lock it. 
  * 
@@ -198,5 +234,6 @@ module.exports = {
     updateQueue: updateQuestionQueue,
     reformQueue: reformQueue,
     activityLog: activityLog,
+    swipeLog: swipeLog,
     cleanup: cleanup
 }
