@@ -88,7 +88,7 @@ const FBGraphRequest = async (fields, callback) => {
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
         DEBUG && console.log('Play Services Not Available or Outdated');
       } else {
-        DEBUG && console.log('Some Other Error Happened: ', error);
+        DEBUG && console.log('Some Other Error Happened');
       }
     }
   };

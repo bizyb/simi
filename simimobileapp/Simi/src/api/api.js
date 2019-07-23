@@ -51,8 +51,9 @@ export function join(sessionStore, qStore) {
         question: qStore.question,
         questionId: qStore.questionId,
         isOp: sessionStore.isOp,
-        isSme: sessionStore.isSeme,
+        isSme: sessionStore.isSme,
     }
+    DEBUG && console.log("About to join a room with data: ", data)
     sessionStore.socket.emit(sessionStore.events.join, data)
 }
 

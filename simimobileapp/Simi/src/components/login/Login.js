@@ -42,6 +42,15 @@ export default class Login extends Component {
         header: null,
     };
     
+    /**
+     * Configure user id and Google sign in settings. 
+     * 
+     * NB: If the same user logs in using Google and Facebook at 
+     * different times, the server would create two separate records. 
+     * For all intents and purposes, this is fine. However, we need to 
+     * consolidate the two user data on server-side if we want to run 
+     * analytics, feedback review, etc. on the user.
+     */
     componentDidMount() {
         GoogleSignin.configure({
             webClientId:'708370716084-a3r72eauq05pehoba7sdvagdpa8td6dn.apps.googleusercontent.com',
