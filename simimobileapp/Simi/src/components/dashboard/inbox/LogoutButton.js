@@ -8,6 +8,7 @@ import {
     StyleSheet, 
     View,
 } from 'react-native';
+// import { GoogleSignin } from 'react-native-google-signin';
 import { userIsOnline } from "../../../api/api";
 
 const LOGOUT_DESC = strings.inbox.logoutDesc;
@@ -23,12 +24,12 @@ export default class LogoutButton extends Component<Props> {
     showLogoutDialog = () => { this.qStore.showLogoutDialog = true }
     hideLogoutDialog = () => { this.qStore.showLogoutDialog = false }
     logout = () => {
-        this.sessionStore.userId = null
         AsyncStorage.removeItem("userId")
         userIsOnline(this.sessionStore.userId, 
             this.sessionStore.endpoints.user, 
             this.sessionStore.endpoints.methods.post,
             isOnline=false)
+        this.sessionStore.userId = null
         this.props.onPress()
     }
 
