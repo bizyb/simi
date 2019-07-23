@@ -90,7 +90,7 @@ app.post(endpoints.REST.user, (req, res) => {
     let query = req.body
     let msg = {Status: "OK"}
     dbApi.update(dbApi.collections.user, query).then((result) => {
-        settings.DEBUG && console.log("User update: ", result)
+        settings.DEBUG && console.log("User updated with query", query)
         res.send(JSON.stringify(msg))
     }).catch((err) => {
         settings.DEBUG && console.log(err)
@@ -112,7 +112,7 @@ app.get(endpoints.REST.user, (req, res) => {
     let response = {count: -1}
     dbApi.find(dbApi.collections.user, query).then((result) => {
         settings.DEBUG && console.log("Number of users online: ", result.length)
-	settings.DEBUG && console.log("Users found: ", result)
+	//settings.DEBUG && console.log("Users found: ", result)
         response.count = result.length
         res.send(JSON.stringify(response))
     }).catch((err) => {
