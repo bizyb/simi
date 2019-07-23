@@ -169,6 +169,7 @@ export default class Inbox extends Component<Props> {
       return (
         <InboxItem 
             index={index}
+            partnerPicture={item.partnerPicture}
             heading={item.heading} 
             isOpened={item.isRead}
             subheading={item.subheading} 
