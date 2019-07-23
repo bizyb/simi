@@ -22,7 +22,7 @@ import endpoints from "../../api/endpoints";
 import { auth } from "../../utils/login";
 import {observer,inject} from 'mobx-react';
 import io from 'socket.io-client';
-import { DEBUG } from "../../../settings";
+import { DEBUG, WEB_CLIENT_ID } from "../../../settings";
 
 let FACEBOOK_TEXT = strings.login.facebookButton;
 let GOOGLE_TEXT = strings.login.googleButton;
@@ -53,7 +53,7 @@ export default class Login extends Component {
      */
     componentDidMount() {
         GoogleSignin.configure({
-            webClientId:'708370716084-a3r72eauq05pehoba7sdvagdpa8td6dn.apps.googleusercontent.com',
+            webClientId: WEB_CLIENT_ID,
             offlineAccess: true,
         })
         this.getUserId()

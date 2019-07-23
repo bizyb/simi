@@ -133,6 +133,7 @@ onLeave = () => {
   this.crStore.editable         = false
   this.crStore.userDisconnected = true
   this.crStore.partnerOnline    = false
+  this.crStore.isTyping         = false
   this.crStore.buttonTextColor  = GREY
   let data = {
     roomId: this.qStore.questionId,

@@ -1,18 +1,37 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, Image} from 'react-native';
+import {StyleSheet, View, Text, Image, Dimensions, PixelRatio} from 'react-native';
 import { Col, Grid } from "react-native-easy-grid";
 import { getDate } from "../../../utils/utils";
 import {observer,inject} from 'mobx-react';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { DEBUG } from '../../../../settings';
 
-let SUBHEADING_LENGTH = 95;
+const SCREEN_WIDTH = Math.round(Dimensions.get('window').width)
 @inject('rootStore')
 @observer
 export default class InboxItem extends Component<Props> {
     iStore = this.props.rootStore.inboxStore
+    subheadingLength = 32 //default
 
+    componentDidMount() {
+        this.computeSubheadingLength()
+    }
+
+    computeSubheadingLength = () => {
+        let padding = 40 // in dp
+        let rowFraction = 0.85
+        let fontSize = 14 // in dp
+        let charWidth = fontSize / PixelRatio.get() // in dp
+        let imageWidth = 50 // in dp
+        let elipsisSize = 3 * fontSize // in dp
+        let rowWidth =  (SCREEN_WIDTH - padding - imageWidth) * rowFraction // in dp
+        let textWidth  = rowWidth - elipsisSize
+        this.subheadingLength = Math.round(textWidth/charWidth)
+
+    } 
     subheading = () => {
-        if (this.props.subheading.length > SUBHEADING_LENGTH) {
-            return this.props.subheading.substring(0, SUBHEADING_LENGTH) + "..."
+        if (this.props.subheading.length > this.subheadingLength) {
+            return this.props.subheading.substring(0, this.subheadingLength) + "..."
         }
         return this.props.subheading
     }
@@ -24,12 +43,16 @@ export default class InboxItem extends Component<Props> {
         if (this.iStore.data[this.props.index].isSelected) { highlight = "#eeeeee"}
         if (this.props.index > 0) {
             border.borderTopWidth = 1
-            border.borderColor = 'red' 
+            border.borderColor = '#f5f5f5' 
         }
         return (
-                <View style={[styles.rowContainer, {backgroundColor: highlight}, border]}>
+                <View style={[styles.rowContainer, {backgroundColor: highlight}]}>
+                    <TouchableOpacity
+                        onPress={_onPress}
+                        onLongPress={_onLongPress}>
                     <Image source={{uri: this.props.partnerPicture}} style={styles.profileImage}/>
-                    <View style={styles.row}>
+                    </TouchableOpacity>
+                    <View style={[styles.rowText, border]}>
                     <Grid>
                         <Col style={styles.leftCol}>
                             <Text 
@@ -39,13 +62,15 @@ export default class InboxItem extends Component<Props> {
                         </Col>
                         <Col style={styles.rightCol}>
                             <Text style={styles.date}
+                            onPress={_onPress}
                             onLongPress={_onLongPress}>{getDate("inbox", this.props.date)}</Text> 
                         </Col>
                     </Grid>
-                </View>
+                
                     <Text style={styles.subheading}
                     onLongPress={_onLongPress} 
                     onPress={(_onPress)}>{this.subheading()}</Text>
+                    </View>
                 </View>
             
             );
@@ -61,16 +86,14 @@ export default class InboxItem extends Component<Props> {
     }
   const styles = StyleSheet.create({
     rowContainer: {
-      paddingTop: 5,
-      paddingBottom: 5,
       paddingLeft: 20,
       paddingRight: 20,
-      marginBottom: 2,
-
+      flexDirection: 'row',
     },
-    row: {
-        flexDirection: 'row',
-        marginTop: -5,
+    rowText: {
+        paddingTop: 5,
+        paddingBottom: 15,
+        width: '85%',
       },
       leftCol: {
         width: '70%'
@@ -79,20 +102,22 @@ export default class InboxItem extends Component<Props> {
         alignItems: 'flex-end',
         justifyContent: 'flex-end',
       },
+      date: {
+          fontSize: 12,
+      },
       heading: {
-        fontSize: 20,
+        fontSize: 16,
         fontWeight: 'bold',
-        paddingTop: 20,
+        paddingTop: 10,
       },
       subheading: {
-        fontSize: 16,
-      },
-      expiration: {
-          color: "#e8491b"
+        fontSize: 14,
       },
       profileImage: {
-        width: 40,
-        height: 40,
+        width: 50,
+        height: 50,
         borderRadius: 50,
+        marginTop: 12,
+        marginRight: 15,
     },
   });

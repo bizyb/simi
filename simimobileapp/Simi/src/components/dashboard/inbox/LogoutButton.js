@@ -55,11 +55,9 @@ export default class LogoutButton extends Component<Props> {
 
 const styles = StyleSheet.create({
     container: {
-        flexDirection: 'row',
-        marginTop: -30,
         justifyContent: 'flex-end',
         alignContent: 'flex-start',
         paddingRight: 20,
-
+        paddingLeft: '65%',
     },
 })
