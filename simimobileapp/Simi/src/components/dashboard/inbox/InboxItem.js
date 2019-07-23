@@ -3,8 +3,9 @@ import {StyleSheet, View, Text, Image} from 'react-native';
 import { Col, Grid } from "react-native-easy-grid";
 import { getDate } from "../../../utils/utils";
 import {observer,inject} from 'mobx-react';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-let SUBHEADING_LENGTH = 64;
+let SUBHEADING_LENGTH = 32;
 @inject('rootStore')
 @observer
 export default class InboxItem extends Component<Props> {
@@ -24,11 +25,15 @@ export default class InboxItem extends Component<Props> {
         if (this.iStore.data[this.props.index].isSelected) { highlight = "#eeeeee"}
         if (this.props.index > 0) {
             border.borderTopWidth = 1
-            border.borderColor = '#eeeeee' 
+            border.borderColor = '#f5f5f5' 
         }
         return (
                 <View style={[styles.rowContainer, {backgroundColor: highlight}]}>
+                    <TouchableOpacity
+                        onPress={_onPress}
+                        onLongPress={_onLongPress}>
                     <Image source={{uri: this.props.partnerPicture}} style={styles.profileImage}/>
+                    </TouchableOpacity>
                     <View style={[styles.rowText, border]}>
                     <Grid>
                         <Col style={styles.leftCol}>
@@ -86,16 +91,16 @@ export default class InboxItem extends Component<Props> {
         alignItems: 'flex-end',
         justifyContent: 'flex-end',
       },
+      date: {
+          fontSize: 12,
+      },
       heading: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: 'bold',
         paddingTop: 10,
       },
       subheading: {
-        fontSize: 16,
-      },
-      expiration: {
-          color: "#e8491b"
+        fontSize: 14,
       },
       profileImage: {
         width: 50,

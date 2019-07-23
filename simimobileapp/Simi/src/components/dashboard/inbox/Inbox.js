@@ -189,21 +189,20 @@ export default class Inbox extends Component<Props> {
       return null
     }
     render() {
-      // DEBUG && console.log("this.iStore.selectedItems: ", this.iStore.selectedItems)
-      // DEBUG && console.log("this.iStore.showDeleteBtn: ", this.iStore.showDeleteBtn)
-
-      // // globalStyles.container,
-
+     
       return (
-        <View style={[{paddingBottom: 5, flex: 1}]}>
+        <View style={[{paddingBottom: 10, flex: 1}]}>
+        <View style={styles.headerContainer}>
            <Text style={[
              globalStyles.tabHeader, {
-                paddingBottom: 10,
                 paddingLeft: 20,
                 paddingRight: 20,
+                marginBottom: -5,
               }
              ]}>{HEADER}</Text>
-           <LogoutButton onPress={() => this.props.navigation.navigate("Auth")}/>
+             
+            <LogoutButton onPress={() => this.props.navigation.navigate("Auth")}/>
+           </View>
            {this._renderSubheading()}
            <FlatList
                   keyExtractor={item => item._id}
@@ -217,4 +216,10 @@ export default class Inbox extends Component<Props> {
       );
     }
   }
-
+  const styles = StyleSheet.create({
+    headerContainer: {
+        flexDirection: 'row',
+          paddingBottom: 20, 
+          // backgroundColor: 'red'
+    },
+})
