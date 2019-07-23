@@ -208,7 +208,6 @@ const update = (collectionName, data) => {
         if (collectionName == collections.user && data.userId == null) {
             query = {
                 email: data.email,
-                facebookId: data.facebookId
             }   
         } else if (collectionName == collections.user) {
             query = {
