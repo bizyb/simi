@@ -27,7 +27,7 @@ let STALE = strings.deck.stale;
 @inject('rootStore')
 @observer
 export default class QuestionDeck extends Component<Props> {
-
+    crStore = this.props.rootStore.chatRoomStore
     qdStore = this.props.rootStore.questionDeckStore
     qStore = this.props.rootStore.questionStore
     sessionStore = this.props.rootStore.sessionStore
@@ -99,7 +99,7 @@ export default class QuestionDeck extends Component<Props> {
             this.qdStore.currentIndex = this.qdStore.currentIndex + 1
             this.position.setValue({ x: 0, y: 0 })
             this.reformQueue()
-            this.rightSwipeHandler()
+            this.props.navigation.navigate("ChatRoom")
           })
           
         }
@@ -136,39 +136,6 @@ onSwipeDeck = () => {
   }
   request(data, this.sessionStore.endpoints.swipeDeck, this.sessionStore.endpoints.methods.get).then((result) => {
     this.qdStore.questions = result.queue
-  }).catch((err) => {
-      DEBUG && console.log(err)
-  })
-}
-
- /**
- * Check with the server if this sme should join the chat room.
- * If so, join the chat room.
- */
-rightSwipeHandler = () => {
-
-  let index = this.qdStore.currentIndex - 1
-  this.sessionStore.isOp = false
-  this.sessionStore.isSme = true
-  this.qStore.question = this.qdStore.questions[index].question
-  this.qStore.questionId = this.qdStore.questions[index].questionId
-  let data = {
-    questionId: this.qStore.questionId
-  }
-  
-  request(data, this.sessionStore.endpoints.rightSwipe, this.sessionStore.endpoints.methods.get).then((result) => {
-    DEBUG && console.log("rightSwipe: ", result)
-    if (result.canJoin) {
-      join(this.sessionStore, this.qStore)
-      this.props.navigation.navigate("ChatRoom")
-    } else {
-      // sme not allowed to join because
-      // 1. someone else is already answering the question
-      // 2. the question has already been answered (stale)
-      // 3. the question has been cancelled/deleted (stale)
-      this.qdStore.showStaleQWarning = true
-      setTimeout(()=> {this.qdStore.showStaleQWarning = false}, 1000)
-    }
   }).catch((err) => {
       DEBUG && console.log(err)
   })

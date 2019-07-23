@@ -11,7 +11,7 @@ import ChatTopBar from './ChatTopBar';
 import ChatMessageList from './ChatMessageList';
 import ChatMessageInput from './ChatMessageInput';
 import strings from "../../assets/en/json/strings.json";
-import { request, userIsOnline } from "../../api/api";
+import { request, userIsOnline, join } from "../../api/api";
 import {observer, inject} from 'mobx-react';
 import { DEBUG } from "../../../settings";
 import shortid from "shortid";
@@ -30,6 +30,7 @@ let GREY  = "grey"
 export default class ChatRoom extends Component<Props> {
   crStore = this.props.rootStore.chatRoomStore
   qStore = this.props.rootStore.questionStore
+  qdStore = this.props.rootStore.questionDeckStore
   sessionStore = this.props.rootStore.sessionStore
   
   focusListener = this.props.navigation.addListener("didFocus", () => {
@@ -52,6 +53,7 @@ export default class ChatRoom extends Component<Props> {
     if (this.sessionStore.isOp) {
       eventName = this.sessionStore.events.smeFound
     } else {
+      this.onRightSwipe()
       eventName = this.sessionStore.events.opFound
     }
     this.sessionStore.socket.on(eventName, (data) => {
@@ -94,6 +96,33 @@ _handleAppStateChange = (nextAppState) => {
   }
 }
 
+onRightSwipe = () => {
+  this.crStore.showConnectionDialog = true 
+  let index = this.qdStore.currentIndex - 1
+  this.sessionStore.isOp = false
+  this.sessionStore.isSme = true
+  this.qStore.question = this.qdStore.questions[index].question
+  this.qStore.questionId = this.qdStore.questions[index].questionId
+  let data = {
+    questionId: this.qStore.questionId
+  }
+  
+  request(data, this.sessionStore.endpoints.rightSwipe, this.sessionStore.endpoints.methods.get).then((result) => {
+    DEBUG && console.log("onRightSwipe: ", result)
+    if (!result.canJoin) {
+      join(this.sessionStore, this.qStore)
+    } else {
+      // sme not allowed to join because
+      // 1. someone else is already answering the question
+      // 2. the question has already been answered (stale)
+      // 3. the question has been cancelled/deleted (stale)
+      this.onGoToDeck()
+      
+    }
+  }).catch((err) => {
+      DEBUG && console.log(err)
+  })
+}
 
  
  /**
