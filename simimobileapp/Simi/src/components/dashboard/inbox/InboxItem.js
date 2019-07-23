@@ -5,9 +5,11 @@ import { getDate } from "../../../utils/utils";
 import {observer,inject} from 'mobx-react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DEBUG } from '../../../../settings';
+import strings from "../../../assets/en/json/strings.json";
 
 const SCREEN_WIDTH = Math.round(Dimensions.get('window').width)
 const HEADER_LENGTH = 20;
+const ANONYMOUS = strings.inbox.anonymous;
 @inject('rootStore')
 @observer
 export default class InboxItem extends Component<Props> {
@@ -31,24 +33,19 @@ export default class InboxItem extends Component<Props> {
 
     }
     truncateString = (text, maxLength, isSubheading=false) => {
-        if (text.length > maxLength) {
-            text = text.substring(0, maxLength)
-            if (isSubheading) { text += "..."}
+        try {
+            if (text.length > maxLength) {
+                text = text.substring(0, maxLength)
+                if (isSubheading) { text += "..."}
+            }
+        } catch (err) {
+            DEBUG && console.log(err)
+            text = ANONYMOUS
         }
+        
         return text
     } 
-    // heading = () => {
-    //     if (this.props.heading.length > HEADER_LENGTH) {
-    //         return this.props.heading.substring(0, HEADER_LENGTH)
-    //     }
-    //     return this.props.heading
-    // }
-    // subheading = () => {
-    //     if (this.props.subheading.length > this.subheadingLength) {
-    //         return this.props.subheading.substring(0, this.subheadingLength) + "..."
-    //     }
-    //     return this.props.subheading
-    // }
+    
     renderItem = () => {  
         let _onPress = ()=> {this.props.onPress(this.props.messageType, this.props.index)}
         let _onLongPress = ()=> {this.props.onPress(this.props.messageType, this.props.index, longPress=true)}
