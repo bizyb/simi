@@ -220,6 +220,5 @@ export default class Inbox extends Component<Props> {
     headerContainer: {
         flexDirection: 'row',
           paddingBottom: 20, 
-          // backgroundColor: 'red'
     },
 })

@@ -1,19 +1,37 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, Image} from 'react-native';
+import {StyleSheet, View, Text, Image, Dimensions, PixelRatio} from 'react-native';
 import { Col, Grid } from "react-native-easy-grid";
 import { getDate } from "../../../utils/utils";
 import {observer,inject} from 'mobx-react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { DEBUG } from '../../../../settings';
 
-let SUBHEADING_LENGTH = 32;
+const SCREEN_WIDTH = Math.round(Dimensions.get('window').width)
 @inject('rootStore')
 @observer
 export default class InboxItem extends Component<Props> {
     iStore = this.props.rootStore.inboxStore
+    subheadingLength = 32 //default
 
+    componentDidMount() {
+        this.computeSubheadingLength()
+    }
+
+    computeSubheadingLength = () => {
+        let padding = 40 // in dp
+        let rowFraction = 0.85
+        let fontSize = 14 // in dp
+        let charWidth = fontSize / PixelRatio.get() // in dp
+        let imageWidth = 50 // in dp
+        let elipsisSize = 3 * fontSize // in dp
+        let rowWidth =  (SCREEN_WIDTH - padding - imageWidth) * rowFraction // in dp
+        let textWidth  = rowWidth - elipsisSize
+        this.subheadingLength = Math.round(textWidth/charWidth)
+
+    } 
     subheading = () => {
-        if (this.props.subheading.length > SUBHEADING_LENGTH) {
-            return this.props.subheading.substring(0, SUBHEADING_LENGTH) + "..."
+        if (this.props.subheading.length > this.subheadingLength) {
+            return this.props.subheading.substring(0, this.subheadingLength) + "..."
         }
         return this.props.subheading
     }
@@ -70,19 +88,12 @@ export default class InboxItem extends Component<Props> {
     rowContainer: {
       paddingLeft: 20,
       paddingRight: 20,
-    //   marginBottom: 2,
       flexDirection: 'row',
-
-
     },
     rowText: {
-        // flexDirection: 'row',
-        // marginTop: -5,
         paddingTop: 5,
         paddingBottom: 15,
-        width: "85%",
-        // backgroundColor: 'green',
-        // paddingLeft: 20,
+        width: '85%',
       },
       leftCol: {
         width: '70%'
@@ -108,6 +119,5 @@ export default class InboxItem extends Component<Props> {
         borderRadius: 50,
         marginTop: 12,
         marginRight: 15,
-        // width: "20%",
     },
   });

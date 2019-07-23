@@ -127,7 +127,7 @@ const DashboardTabNavigator = createBottomTabNavigator(
       activeTintColor: 'tomato',
       inactiveTintColor: 'gray',
     },
-    initialRouteName: 'Inbox',
+    initialRouteName: 'Ask',
     order: ["Ask", "Answer", "Inbox"]
   },
 )
