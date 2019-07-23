@@ -1,7 +1,0 @@
-simiwebapp/data/certbot
-simiwebapp/data/certbot/*
-simiwebapp/data/certbot/conf/archive
-simiwebapp/data/certbot/conf/csr/0001_csr-certbot.pem
-simiwebapp/data/certbot/conf/keys/0001_key-certbot.pem
-simiwebapp/data/certbot/conf/live/
-simiwebapp/data/certbot/conf/renewal/
