@@ -3,7 +3,7 @@ import {StyleSheet, View, Text, TextInput, KeyboardAvoidingView} from 'react-nat
 import Logo from '../../login/Logo';
 import strings from "../../../assets/en/json/strings.json";
 import {observer, inject} from 'mobx-react';
-import  { request, join, userIsOnline } from "../../../api/api";
+import  { request, userIsOnline } from "../../../api/api";
 import { DEBUG } from "../../../../settings";
 
 let PLACEHOLDER =  strings.ask.placeholder; 
@@ -66,19 +66,8 @@ export default class QuestionInput extends Component<Props> {
         this.sessionStore.isOp = true
         this.sessionStore.isSme = false
         if (this.qStore.question.trim().length > 0) {
-            let data = {
-                question: this.qStore.question,
-                userId: this.sessionStore.userId,
-            }
             this.qStore.value = this.qStore.question
-            request(data, this.sessionStore.endpoints.question, this.sessionStore.endpoints.methods.post).then((result) => {
-                this.qStore.questionId = result.questionId
-                join(this.sessionStore, this.qStore)
-                this.props.navigation.navigate("ChatRoom")
-            }).catch((err) => {
-                DEBUG && console.log(err)
-            })
-            
+            this.props.navigation.navigate("ChatRoom") 
         } 
     }
     componentWillUnmount() {

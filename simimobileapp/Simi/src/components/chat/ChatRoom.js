@@ -51,6 +51,7 @@ export default class ChatRoom extends Component<Props> {
     // Listen for any sme/op connection events from the server
     let eventName
     if (this.sessionStore.isOp) {
+      this.onQuestionSubmit()
       eventName = this.sessionStore.events.smeFound
     } else {
       this.onRightSwipe()
@@ -94,6 +95,19 @@ _handleAppStateChange = (nextAppState) => {
   if (nextAppState == "active" && this.sessionStore.isPopulated) {
       this.forceRedirect()
   }
+}
+
+onQuestionSubmit = () => {
+  let data = {
+    question: this.qStore.question,
+    userId: this.sessionStore.userId,
+  }
+  request(data, this.sessionStore.endpoints.question, this.sessionStore.endpoints.methods.post).then((result) => {
+    this.qStore.questionId = result.questionId
+    join(this.sessionStore, this.qStore)
+  }).catch((err) => {
+      DEBUG && console.log(err)
+  })
 }
 
 onRightSwipe = () => {

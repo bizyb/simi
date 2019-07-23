@@ -13,7 +13,7 @@ import CardStack from './CardStack';
 import CommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import strings from "../../../assets/en/json/strings.json";
 import {observer,inject} from 'mobx-react';
-import { request, join, userIsOnline } from "../../../api/api";
+import { request, userIsOnline } from "../../../api/api";
 import { DEBUG } from "../../../../settings";
 import StaleQuestion from './StaleQuestion';
 
