@@ -88,7 +88,6 @@ app.post(endpoints.REST.user, (req, res) => {
         helpers.activityLog(req.body.userId) 
     }
     let query = req.body
-    query.role = "user"
     let msg = {Status: "OK"}
     dbApi.update(dbApi.collections.user, query).then((result) => {
         settings.DEBUG && console.log("User update: ", result)
@@ -127,6 +126,10 @@ app.get(endpoints.REST.user, (req, res) => {
  */
 app.post(endpoints.REST.reformQueue, (req, res) => {
     helpers.reformQueue(req.body.userId)
+    if (req.body.leftSwipe){
+	    let swipeLogIncrement = { leftSwipeCount: 1 }
+	    helpers.swipeLog(swipeLogIncrement)
+    }
     let msg = {Status: "OK"}
     res.send(JSON.stringify(msg))
 })
@@ -319,12 +322,18 @@ app.get(endpoints.REST.download, (req, res) => {
 
 /**
  * Check if the current question has alredy been answered. If so,
- * deny join. Otherwise, allow it.
+ * deny join. Otherwise, allow it. Increment the swipe counts
+ * as well.
  */
 app.get(endpoints.REST.rightSwipe, (req, res) => {
     let canJoin = false
+    let swipeLogIncrement = { rightSwipeCount: 1 }
     dbApi.find(dbApi.collections.question, req.body).then((result) => {
-        if (result.length > 0 && !result[0].isAnswered) { canJoin = true }
+        if (result.length > 0 && !result[0].isAnswered) { 
+		canJoin = true 
+		swipeLogIncrement.rightSwipeSuccessCount = 1
+	}
+        helpers.swipeLog(swipeLogIncrement)
         res.send(JSON.stringify({canJoin: canJoin}))
     }).catch((err) => {
         settings.DEBUG && console.log(err)
