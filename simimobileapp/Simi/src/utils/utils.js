@@ -1,6 +1,5 @@
 import { DEBUG } from "../../settings";
 import moment from 'moment'
-import { request } from "../api/api"
 
 /**
  * Return a unix timestamp in human-readable format.
@@ -9,10 +8,9 @@ import { request } from "../api/api"
  * @param {*} date unix timestamp 
  */
 export function getDate(_for, date) {
-    if (_for == "inbox") {  
-        return moment(date).subtract(10, 'days').calendar()
+    let formattedDate = moment(date).fromNow()
+    if (_for == "chat") {
+        formattedDate = moment(date).format('MMMM Do YYYY')
     }
-    else if (_for == "chat") {
-        return moment(date).format('MMMM Do YYYY')
-    }
+    return formattedDate
 }
