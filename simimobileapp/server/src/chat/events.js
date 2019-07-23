@@ -253,12 +253,13 @@ const pushToInbox = (roomId, partnerPicture, isOp=false) => {
                         let userId = ""
                         let heading = ""
                         let subheading = ""
+			// heading refers to the chat partner
                         if (isOp) {
                             userId = crResult[0].op.userId
-                            heading = crResult[0].op.firstName
+                            heading = crResult[0].sme.firstName
                         } else { 
                             userId = crResult[0].sme.userId
-                            heading = crResult[0].sme.firstName
+                            heading = crResult[0].op.firstName
                         }
                         subheading = crResult[0].question
                         let inboxItem = {
