@@ -62,7 +62,6 @@ export class QuestionDeckStore {
     @observable currentIndex            = 0
     @observable questions               = []
     @observable isRefreshing            = false
-    @observable showStaleQWarning       = false
     @observable showSwipeInstructions   = true
     @observable refreshIconColor        = "tomato"
 

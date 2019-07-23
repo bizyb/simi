@@ -127,7 +127,11 @@ app.get(endpoints.REST.user, (req, res) => {
 app.post(endpoints.REST.reformQueue, (req, res) => {
     helpers.reformQueue(req.body.userId)
     if (req.body.leftSwipe){
-	    let swipeLogIncrement = { leftSwipeCount: 1 }
+	    let swipeLogIncrement = { 
+            rightSwipeCount: 0,
+            rightSwipeSuccessCount: 0,
+            leftSwipeCount: 1 
+        }
 	    helpers.swipeLog(swipeLogIncrement)
     }
     let msg = {Status: "OK"}
@@ -327,7 +331,11 @@ app.get(endpoints.REST.download, (req, res) => {
  */
 app.get(endpoints.REST.rightSwipe, (req, res) => {
     let canJoin = false
-    let swipeLogIncrement = { rightSwipeCount: 1 }
+    let swipeLogIncrement = { 
+        rightSwipeCount: 1,
+        rightSwipeSuccessCount: 0,
+        leftSwipeCount: 0 
+    }
     dbApi.find(dbApi.collections.question, req.body).then((result) => {
         if (result.length > 0 && !result[0].isAnswered) { 
 		canJoin = true 
