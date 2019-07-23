@@ -4,7 +4,7 @@ import { Col, Grid } from "react-native-easy-grid";
 import { getDate } from "../../../utils/utils";
 import {observer,inject} from 'mobx-react';
 
-let SUBHEADING_LENGTH = 95;
+let SUBHEADING_LENGTH = 64;
 @inject('rootStore')
 @observer
 export default class InboxItem extends Component<Props> {
@@ -24,12 +24,12 @@ export default class InboxItem extends Component<Props> {
         if (this.iStore.data[this.props.index].isSelected) { highlight = "#eeeeee"}
         if (this.props.index > 0) {
             border.borderTopWidth = 1
-            border.borderColor = 'red' 
+            border.borderColor = '#eeeeee' 
         }
         return (
-                <View style={[styles.rowContainer, {backgroundColor: highlight}, border]}>
+                <View style={[styles.rowContainer, {backgroundColor: highlight}]}>
                     <Image source={{uri: this.props.partnerPicture}} style={styles.profileImage}/>
-                    <View style={styles.row}>
+                    <View style={[styles.rowText, border]}>
                     <Grid>
                         <Col style={styles.leftCol}>
                             <Text 
@@ -39,13 +39,15 @@ export default class InboxItem extends Component<Props> {
                         </Col>
                         <Col style={styles.rightCol}>
                             <Text style={styles.date}
+                            onPress={_onPress}
                             onLongPress={_onLongPress}>{getDate("inbox", this.props.date)}</Text> 
                         </Col>
                     </Grid>
-                </View>
+                
                     <Text style={styles.subheading}
                     onLongPress={_onLongPress} 
                     onPress={(_onPress)}>{this.subheading()}</Text>
+                    </View>
                 </View>
             
             );
@@ -61,16 +63,21 @@ export default class InboxItem extends Component<Props> {
     }
   const styles = StyleSheet.create({
     rowContainer: {
-      paddingTop: 5,
-      paddingBottom: 5,
       paddingLeft: 20,
       paddingRight: 20,
-      marginBottom: 2,
+    //   marginBottom: 2,
+      flexDirection: 'row',
+
 
     },
-    row: {
-        flexDirection: 'row',
-        marginTop: -5,
+    rowText: {
+        // flexDirection: 'row',
+        // marginTop: -5,
+        paddingTop: 5,
+        paddingBottom: 15,
+        width: "85%",
+        // backgroundColor: 'green',
+        // paddingLeft: 20,
       },
       leftCol: {
         width: '70%'
@@ -80,9 +87,9 @@ export default class InboxItem extends Component<Props> {
         justifyContent: 'flex-end',
       },
       heading: {
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: 'bold',
-        paddingTop: 20,
+        paddingTop: 10,
       },
       subheading: {
         fontSize: 16,
@@ -91,8 +98,11 @@ export default class InboxItem extends Component<Props> {
           color: "#e8491b"
       },
       profileImage: {
-        width: 40,
-        height: 40,
+        width: 50,
+        height: 50,
         borderRadius: 50,
+        marginTop: 12,
+        marginRight: 15,
+        // width: "20%",
     },
   });
