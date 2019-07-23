@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View, Text, Image} from 'react-native';
 import { Col, Grid } from "react-native-easy-grid";
 import { getDate } from "../../../utils/utils";
 import {observer,inject} from 'mobx-react';
@@ -20,9 +20,15 @@ export default class InboxItem extends Component<Props> {
         let _onPress = ()=> {this.props.onPress(this.props.messageType, this.props.index)}
         let _onLongPress = ()=> {this.props.onPress(this.props.messageType, this.props.index, longPress=true)}
         let highlight = "transparent"
+        let border = {}
         if (this.iStore.data[this.props.index].isSelected) { highlight = "#eeeeee"}
+        if (this.props.index > 0) {
+            border.borderTopWidth = 1
+            border.borderColor = 'red' 
+        }
         return (
-                <View style={[styles.rowContainer, {backgroundColor: highlight}]}>
+                <View style={[styles.rowContainer, {backgroundColor: highlight}, border]}>
+                    <Image source={{uri: this.props.partnerPicture}} style={styles.profileImage}/>
                     <View style={styles.row}>
                     <Grid>
                         <Col style={styles.leftCol}>
@@ -55,6 +61,8 @@ export default class InboxItem extends Component<Props> {
     }
   const styles = StyleSheet.create({
     rowContainer: {
+      paddingTop: 5,
+      paddingBottom: 5,
       paddingLeft: 20,
       paddingRight: 20,
       marginBottom: 2,
@@ -81,5 +89,10 @@ export default class InboxItem extends Component<Props> {
       },
       expiration: {
           color: "#e8491b"
-      }
+      },
+      profileImage: {
+        width: 40,
+        height: 40,
+        borderRadius: 50,
+    },
   });

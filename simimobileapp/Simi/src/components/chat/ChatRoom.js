@@ -137,7 +137,8 @@ onLeave = () => {
   let data = {
     roomId: this.qStore.questionId,
     isOp: this.sessionStore.isOp,
-    isSme: this.sessionStore.isSme
+    isSme: this.sessionStore.isSme,
+    partnerPicture: this.sessionStore.chatPartner.picture,
   }
   this.qStore.questionId = ""
   this.qStore.question = ""

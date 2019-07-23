@@ -109,7 +109,7 @@ export default class QuestionDeck extends Component<Props> {
           }).start(() => {
             this.qdStore.currentIndex = this.qdStore.currentIndex + 1
             this.position.setValue({ x: 0, y: 0 })
-            this.reformQueue()
+            this.reformQueue(leftSwipe=true)
           })
           
         }
@@ -174,11 +174,12 @@ rightSwipeHandler = () => {
   })
 }
 
-reformQueue = () => {
+reformQueue = (leftSwipe=false) => {
   let index = this.qdStore.currentIndex - 1
   if (index >= 0) {
     data = {
       userId: this.sessionStore.userId,
+      leftSwipe: leftSwipe,
     }
     request(data, this.sessionStore.endpoints.reformQueue, this.sessionStore.endpoints.methods.post).then((result) => {
       DEBUG && console.log(result)

@@ -236,7 +236,7 @@ const onFeedback = (data, socket) => {
  * 
  * @param {string} roomId 
  */
-const pushToInbox = (roomId, isOp=false) => {
+const pushToInbox = (roomId, partnerPicture, isOp=false) => {
         let query = {
             roomId: roomId
         }
@@ -267,6 +267,7 @@ const pushToInbox = (roomId, isOp=false) => {
                             messageType: dbApi.messageType.chat,
                             heading: heading,
                             subheading: subheading,
+                            partnerPicture: partnerPicture,
                             isRead: false,
                             url: null,
                             userId: userId,
@@ -299,7 +300,7 @@ const pushToInbox = (roomId, isOp=false) => {
 const onLeave = (data, socket) => {
     // push chat log to the inbox
     settings.DEBUG && console.log("Pushing to inbox with data: ", data)
-    pushToInbox(data.roomId, data.isOp)
+    pushToInbox(data.roomId, data.partnerPicture, data.isOp)
     let query = { roomId: data.roomId }
     dbApi.find(dbApi.collections.chatRoom, query).then((fResult) => {
         if (fResult.length > 0) {

@@ -12,6 +12,7 @@ const collections = {
     chatRoom:       "chatRoom",
     feedback:       "feedback",
     activityLog:    "activityLog",
+    swipe:          "swipe",
 }
 const messageType = {
     chat: "chat",
@@ -84,7 +85,11 @@ const messageType = {
  *              chatId: string,
  *              question: string,
  *          }
- * 
+ *  swipe: {
+ *          leftSwipeCount: integer,
+ *          rightSwipeCount: integer,
+ *          rightSwipeSuccessCount: integer,
+ *          }
  *  inbox:
  *       {
  *          created: Date,
