@@ -3,35 +3,31 @@ const settings = require("../../settings")
 
 /**
  * Log swipe count
+ * 
+ * TODO: Get $inc to work.
  */
 const swipeLog = (values) => {
-    let query = {
-        $inc: values,
-    }
+    let query = {}
     settings.DEBUG && console.log("Swipe log to be updated with query: ", query)
-    dbApi.update(dbApi.collections.swipe, query).then((result) => {
-        settings.DEBUG && console.log("Swipe log updated: ", result)
-        // if (result.length == 0) {
-        //     query = {
-        //         leftSwipeCount: 0,
-        //         rightSwipeCount: 0,
-        //         rightSwipeSuccessCount: 0,
-        //     }
-        //     dbApi.insert(dbApi.collections.swipe, query).then((result) => {
-        //         settings.DEBUG && console.log("New swipe log created")
-        //     }).catch((err) => {
-        //         settings.DEBUG && console.log(err)
-        //     })
-        // } else {
-        //     query = result[0]
-        //     query[field] = query[field] + 1
-        //     settings.DEBUG && console.log("Swipe log to be updated with query: ", query)
-        //     dbApi.update(dbApi.collections.swipe, query).then((result) => {
-        //         settings.DEBUG && console.log("Swipe log updated: ", result)
-        //     }).catch((err) => {
-        //         settings.DEBUG && console.log(err)
-        //     })  
-        // }
+    dbApi.find(dbApi.collections.swipe, query).then((result) => {
+        if (result.length == 0) {
+            query = values
+            dbApi.insert(dbApi.collections.swipe, query).then((result) => {
+                settings.DEBUG && console.log("New swipe log created: ", result)
+            }).catch((err) => {
+                settings.DEBUG && console.log(err)
+            })
+        } else {
+            query = result[0]
+            query.rightSwipeCount = query.rightSwipeCount + values.rightSwipeCount
+            query.rightSwipeSuccessCount = query.rightSwipeSuccessCount + values.rightSwipeSuccessCount 
+            query.leftSwipeCount = query.leftSwipeCount + values.leftSwipeCount 
+            dbApi.update(dbApi.collections.swipe, query).then((result) => {
+                settings.DEBUG && console.log("Swipe log updated: ", result)
+            }).catch((err) => {
+                settings.DEBUG && console.log(err)
+            })  
+        }
     }).catch((err) => {
         settings.DEBUG && console.log(err)
     })   

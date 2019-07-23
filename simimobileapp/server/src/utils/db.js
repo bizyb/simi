@@ -209,12 +209,7 @@ const update = (collectionName, data) => {
     return new Promise((resolve, reject) => {
     MongoClient.connect(URL, { useNewUrlParser: true }).then((db) => {
         client = db.db(DB_NAME).collection(collectionName)
-        // if swipe, we're incrementing; otherwise, we're setting the field
         let query = {}
-        let theUpdate = {
-            $set: data,
-            $currentDate: { lastModified: true }
-        }
         if (collectionName == collections.user && data.userId == null) {
             query = {
                 email: data.email,
@@ -240,11 +235,14 @@ const update = (collectionName, data) => {
                 roomId: data.roomId,
             }
         } else if (collectionName == collections.swipe) {
-            theUpdate = data
+            query = {}
         }
         client.updateOne(
             query,
-            theUpdate
+            {
+                $set: data,
+                $currentDate: { lastModified: true }
+            }
         ).then((result) => {
             db.close()
             find(collectionName, query).then((fResult) => {
