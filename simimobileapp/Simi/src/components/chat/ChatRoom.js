@@ -109,7 +109,7 @@ onRightSwipe = () => {
   
   request(data, this.sessionStore.endpoints.rightSwipe, this.sessionStore.endpoints.methods.get).then((result) => {
     DEBUG && console.log("onRightSwipe: ", result)
-    if (!result.canJoin) {
+    if (result.canJoin) {
       join(this.sessionStore, this.qStore)
     } else {
       // sme not allowed to join because

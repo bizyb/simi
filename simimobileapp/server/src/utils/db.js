@@ -210,6 +210,10 @@ const update = (collectionName, data) => {
     MongoClient.connect(URL, { useNewUrlParser: true }).then((db) => {
         client = db.db(DB_NAME).collection(collectionName)
         let query = {}
+        let theUpdate =  {
+            $set: data,
+            $currentDate: { lastModified: true }
+        }
         if (collectionName == collections.user && data.userId == null) {
             query = {
                 email: data.email,
@@ -236,13 +240,13 @@ const update = (collectionName, data) => {
             }
         } else if (collectionName == collections.swipe) {
             query = {}
+            theUpdate = {
+                $set: data
+            }
         }
         client.updateOne(
             query,
-            {
-                $set: data,
-                $currentDate: { lastModified: true }
-            }
+            theUpdate,
         ).then((result) => {
             db.close()
             find(collectionName, query).then((fResult) => {
