@@ -304,7 +304,7 @@ app.get(endpoints.REST.download, (req, res) => {
     dbApi.find(dbApi.collections.inbox, query).then((inboxRes) => {
         dbApi.find(dbApi.collections.knowledgebase, query).then((kbRes) => {
             dbApi.find(dbApi.collections.user, query).then((userRes) => {
-		settings.DEBUG && console.log("User result found for download: ", userRes)
+		//settings.DEBUG && console.log("User result found for download: ", userRes)
                 res.send(JSON.stringify({
                     knowledgeBaseData: kbRes,
                     inboxData: inboxRes,

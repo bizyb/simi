@@ -274,7 +274,7 @@ const pushToInbox = (roomId, partnerPicture, isOp=false) => {
                             userId: userId,
                             questionId: crResult[0].roomId
                         }
-                        DEBUG && console.log("Inbox item creation date: ", inboxItem.lastModified)
+                        settings.DEBUG && console.log("Inbox item creation date: ", inboxItem.lastModified)
                         dbApi.insert(dbApi.collections.inbox, inboxItem).then((iResult) => {
                             settings.DEBUG && console.log(iResult)
                         }).catch((err) => {

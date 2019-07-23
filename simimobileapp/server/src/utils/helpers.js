@@ -173,7 +173,7 @@ const userIsOffline = (userId) => {
         isOnline: false,
     }
     dbApi.update(dbApi.collections.user, data).then((result) => {
-        settings.DEBUG && console.log("Cleanup: ", result)
+        settings.DEBUG && console.log("Cleanup: ", result.length)
     }).catch((err) => {
         settings.DEBUG && console.log(err)
     })
