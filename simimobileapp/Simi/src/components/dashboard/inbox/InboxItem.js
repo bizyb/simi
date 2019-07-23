@@ -7,6 +7,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DEBUG } from '../../../../settings';
 
 const SCREEN_WIDTH = Math.round(Dimensions.get('window').width)
+const HEADER_LENGTH = 20;
 @inject('rootStore')
 @observer
 export default class InboxItem extends Component<Props> {
@@ -28,13 +29,26 @@ export default class InboxItem extends Component<Props> {
         let textWidth  = rowWidth - elipsisSize
         this.subheadingLength = Math.round(textWidth/charWidth)
 
-    } 
-    subheading = () => {
-        if (this.props.subheading.length > this.subheadingLength) {
-            return this.props.subheading.substring(0, this.subheadingLength) + "..."
-        }
-        return this.props.subheading
     }
+    truncateString = (text, maxLength, isSubheading=false) => {
+        if (text.length > maxLength) {
+            text = text.substring(0, maxLength)
+            if (isSubheading) { text += "..."}
+        }
+        return text
+    } 
+    // heading = () => {
+    //     if (this.props.heading.length > HEADER_LENGTH) {
+    //         return this.props.heading.substring(0, HEADER_LENGTH)
+    //     }
+    //     return this.props.heading
+    // }
+    // subheading = () => {
+    //     if (this.props.subheading.length > this.subheadingLength) {
+    //         return this.props.subheading.substring(0, this.subheadingLength) + "..."
+    //     }
+    //     return this.props.subheading
+    // }
     renderItem = () => {  
         let _onPress = ()=> {this.props.onPress(this.props.messageType, this.props.index)}
         let _onLongPress = ()=> {this.props.onPress(this.props.messageType, this.props.index, longPress=true)}
@@ -58,7 +72,7 @@ export default class InboxItem extends Component<Props> {
                             <Text 
                                 style={[styles.heading, this.iStore.data[this.props.index].isRead ? { color: 'grey'} : {color: 'black'}]} 
                                 onPress={_onPress}
-                                onLongPress={_onLongPress}>{this.props.heading}</Text>
+                                onLongPress={_onLongPress}>{this.truncateString(this.props.heading, HEADER_LENGTH)}</Text>
                         </Col>
                         <Col style={styles.rightCol}>
                             <Text style={styles.date}
@@ -69,7 +83,7 @@ export default class InboxItem extends Component<Props> {
                 
                     <Text style={styles.subheading}
                     onLongPress={_onLongPress} 
-                    onPress={(_onPress)}>{this.subheading()}</Text>
+                    onPress={(_onPress)}>{this.truncateString(this.props.subheading, this.subheadingLength, isSubheading=true)}</Text>
                     </View>
                 </View>
             
@@ -96,7 +110,7 @@ export default class InboxItem extends Component<Props> {
         width: '85%',
       },
       leftCol: {
-        width: '70%'
+        width: '60%',
       },
       rightCol: {
         alignItems: 'flex-end',
