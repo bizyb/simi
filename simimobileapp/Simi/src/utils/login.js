@@ -9,7 +9,6 @@ import {
     GraphRequestManager } from "react-native-fbsdk";
 import {
   GoogleSignin,
-  GoogleSigninButton,
   statusCodes,
 } from 'react-native-google-signin';
 import strings from "../assets/en/json/strings.json"; 
@@ -55,7 +54,7 @@ const FBGraphRequest = async (fields, callback) => {
     new GraphRequestManager().addRequest(infoRequest).start();
   }
 
-  const _signIn = async () => {
+  const googleSignin = async (callback) => {
     //Prompts a modal to let the user sign in into your application.
     try {
       await GoogleSignin.hasPlayServices({
@@ -63,19 +62,33 @@ const FBGraphRequest = async (fields, callback) => {
         //Always resolves to true on iOS.
         showPlayServicesUpdateDialog: true,
       });
+
       const userInfo = await GoogleSignin.signIn();
-      console.log('User Info --> ', userInfo);
-      this.setState({ userInfo: userInfo });
+      DEBUG && console.log("Google Sigin raw data: ", userInfo)
+      let userData = {
+        googleId: userInfo.user.id,
+        picture: userInfo.user.photo, 
+        email: userInfo.user.email,
+        last_name: userInfo.user.familyName, 
+        first_name: userInfo.user.givenName,
+    }
+    DEBUG && console.log("Google Sigin user data: ", userData)
+    request(userData, endpoints.login, endpoints.methods.post).then((newRes) => {
+        userData.userId = newRes.userId
+        callback(userData)
+    }).catch((err) => {
+        DEBUG && console.log(err)
+    })
     } catch (error) {
-      console.log('Message', error.message);
+        DEBUG && console.log('Message', error.message);
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        console.log('User Cancelled the Login Flow');
+        DEBUG && console.log('User Cancelled the Login Flow');
       } else if (error.code === statusCodes.IN_PROGRESS) {
-        console.log('Signing In');
+        DEBUG && console.log('Signing In');
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        console.log('Play Services Not Available or Outdated');
+        DEBUG && console.log('Play Services Not Available or Outdated');
       } else {
-        console.log('Some Other Error Happened');
+        DEBUG && console.log('Some Other Error Happened: ', error);
       }
     }
   };
@@ -93,6 +106,6 @@ export function auth(provider, callback)  {
             DEBUG && console.log("Error occurred: ", err)
         })
     } else if (provider == GOOGLE_PROVIDER) {
-        _signIn()
+        googleSignin(callback)
     }
 }

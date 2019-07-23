@@ -44,12 +44,9 @@ export default class Login extends Component {
     
     componentDidMount() {
         GoogleSignin.configure({
-            //It is mandatory to call this method before attempting to call signIn()
-            scopes: ['https://www.googleapis.com/auth/drive.readonly'],
-            // Repleace with your webClientId generated from Firebase console
-            webClientId:
-              '708370716084-a3r72eauq05pehoba7sdvagdpa8td6dn.apps.googleusercontent.com',
-        });
+            webClientId:'708370716084-a3r72eauq05pehoba7sdvagdpa8td6dn.apps.googleusercontent.com',
+            offlineAccess: true,
+        })
         this.getUserId()
         
     }
