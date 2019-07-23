@@ -82,7 +82,6 @@ export default class ChatRoom extends Component<Props> {
     })
 
     this.crStore.placeholder = PLACEHOLDER
-    this.onNewConnection() 
     BackHandler.addEventListener('hardwareBackPress', ()=>{return true});  
 }
 componentWillUnmount() {
@@ -105,6 +104,7 @@ onQuestionSubmit = () => {
   request(data, this.sessionStore.endpoints.question, this.sessionStore.endpoints.methods.post).then((result) => {
     this.qStore.questionId = result.questionId
     join(this.sessionStore, this.qStore)
+    this.onNewConnection()
   }).catch((err) => {
       DEBUG && console.log(err)
   })
@@ -125,6 +125,7 @@ onRightSwipe = () => {
     DEBUG && console.log("onRightSwipe: ", result)
     if (result.canJoin) {
       join(this.sessionStore, this.qStore)
+      this.onNewConnection() 
     } else {
       // sme not allowed to join because
       // 1. someone else is already answering the question
@@ -207,7 +208,9 @@ onNewConnection = () => {
     isPreamble: true
   }
   keys[preamble.key] = true
+  console.log("=============this.sessionStore.isOp: ", this.sessionStore.isOp)
   if (this.sessionStore.isOp) {
+    console.log("=============emitting the preamble: ", preamble)
     // the preamble can only be created by op
     this.sessionStore.socket.emit(this.sessionStore.events.message, preamble)
   }  

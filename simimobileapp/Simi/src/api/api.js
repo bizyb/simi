@@ -36,7 +36,6 @@ export function userIsOnline(userId, endpoint, method, isOnline=false) {
         userId: userId,
         isOnline: isOnline
     }
-    DEBUG && console.log("Setting userIsOnline status: ", data)
     request(data, endpoint, method).then((result) => {
         DEBUG && console.log(result)
     }).catch((err)=> {
