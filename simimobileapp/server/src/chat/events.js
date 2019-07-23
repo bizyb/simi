@@ -342,7 +342,6 @@ const eventHandler = (socket) => {
      * Later, userId is used in cleanup on disconnect.
      */
     socket.on(endpoints.socket.onUserId, (data) => {
-            settings.DEBUG && console.log("User Id set for socket with id: ", socket.id)
 	    socket["userId"] = data.userId
     })
     socket.on(endpoints.socket.join, (data) => {

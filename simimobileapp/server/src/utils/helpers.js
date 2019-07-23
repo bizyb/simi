@@ -122,7 +122,7 @@ const updateQuestionQueue = (query) => {
     return new Promise((resolve, reject) => {
         dbApi.find(dbApi.collections.user, query).then((result) => {
             if (result.length == 0) {resolve([])}
-	    let queue = result[0].queue.filter(item => item != null } // this question object may get corrupt sometims; TODO: this is a terrible fix
+	    let queue = result[0].queue.filter(item => item != null ) // this question object may get corrupt sometims; TODO: this is a terrible fix
             let questionIds = queue.map(item => item.questionId)
             let newQuery = {
                 questionId: { $in: questionIds}
