@@ -78,9 +78,9 @@ export default class ChatRoom extends Component<Props> {
   // directly and mob-x will react to the new data, it won't be shown to the user
   // until the user activates the input box. Real-time only possible if the entire
   // data structure is updated by cloning.
-    // this.sessionStore.socket.on(this.sessionStore.events.message, (data) => { 
-    //   this.addChatMessage(data)
-    // })
+    this.sessionStore.socket.on(this.sessionStore.events.message, (data) => { 
+      this.addChatMessage(data)
+    })
    
     // listen for typing events
     this.sessionStore.socket.on(this.sessionStore.events.isTyping, (data) => {

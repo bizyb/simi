@@ -36,9 +36,12 @@ export default class ChatMessageList extends Component<Props> {
           this.cmlStore.data = this.cmlStore.cache[this.cmlStore.id]
         }
       }
-
-      
     }
+    componentWillUnmount() {
+      this.cmlStore.data = []
+      this.cmlStore.id = ""
+    }
+
     toggleEncryptionDialog = () => {
       this.cmlStore.showEncryptionDialog = !this.cmlStore.showEncryptionDialog
     }

@@ -152,6 +152,7 @@ export default class QuestionInput extends Component<Props> {
             alignContent: 'center',
             color: '#eeeeee',
             fontSize: 24,
+            paddingTop: '10%',
             fontWeight: '500',
         }
         
