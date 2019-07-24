@@ -6,6 +6,7 @@ import {observer,inject} from 'mobx-react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DEBUG } from '../../../../settings';
 import strings from "../../../assets/en/json/strings.json";
+const avatar = "../../../assets/img/avatar.png";
 
 const SCREEN_WIDTH = Math.round(Dimensions.get('window').width)
 const HEADER_LENGTH = 20;
@@ -56,12 +57,14 @@ export default class InboxItem extends Component<Props> {
             border.borderTopWidth = 1
             border.borderColor = '#f5f5f5' 
         }
+        let picture = { uri: this.props.partnerPicture }
+        if (!picture.uri) { picture = require(avatar) }
         return (
                 <View style={[styles.rowContainer, {backgroundColor: highlight}]}>
                     <TouchableOpacity
                         onPress={_onPress}
                         onLongPress={_onLongPress}>
-                    <Image source={{uri: this.props.partnerPicture}} style={styles.profileImage}/>
+                    <Image source={picture} style={styles.profileImage}/>
                     </TouchableOpacity>
                     <View style={[styles.rowText, border]}>
                     <Grid>

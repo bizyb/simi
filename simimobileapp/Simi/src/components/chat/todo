@@ -1,3 +1,4 @@
 - an sme cannot join a room if there's no op waiting 
     - this happens whenever a question has gone stale and not removed properly
 - initiating another chat briefly shows the chat screen of the previous conversation
+-keyboardview tab nav cover input box

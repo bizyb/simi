@@ -10,6 +10,7 @@ import StarRating from 'react-native-star-rating';
 import { Dialog as StarRatingDialog} from 'react-native-simple-dialogs';
 import strings from "../../assets/en/json/strings.json";
 import {observer,inject} from 'mobx-react';
+const avatar = "../../assets/img/avatar.png";
 
 
 let END_CHAT_DESC =  strings.chat.endChatDesc;
@@ -91,12 +92,13 @@ export default class ChatTopBar extends Component<Props> {
     }
     hideNextSMEDialog = () => { this.ctbStore.showNextSMEDialog = false } 
     showNextSMEDialog = () => { this.ctbStore.showNextSMEDialog =true  }
-    
     renderStatusBar = () => {
         if (this.crStore.connected) {
+            let picture = {uri: this.sessionStore.chatPartner.picture}
+            if (!picture.uri) { picture = require(avatar) }
             return (
                 <View style={styles.connectedContainer}>
-                    <Image source={{uri: this.sessionStore.chatPartner.picture}} style={styles.profileImage}/>
+                    <Image source={picture} style={styles.profileImage}/>
                     {!this.crStore.userDisconnected &&
                         <Text style={[styles.bulletPoint, styles.connectedColor]}>•</Text>
                     }
