@@ -1,5 +1,10 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, FlatList} from 'react-native';
+import {
+  StyleSheet, 
+  View, 
+  Text, 
+  FlatList,
+  ActivityIndicator} from 'react-native';
 import IconLock from 'react-native-vector-icons/Ionicons';
 import Dialog from "react-native-dialog";
 import { getDate } from "../../utils/utils";
@@ -130,8 +135,13 @@ export default class ChatMessageList extends Component<Props> {
       if (!this.props.isChatRoom) { padding = {paddingBottom: 50}}
       return (
               <View style={[styles.messageList,{height: this.props.height}, padding] }>
-                {this.renderFlatList()}
-                {this.renderEncryptionMsgDialog()}
+                {this.cmlStore.data && this.renderFlatList() } 
+                {this.cmlStore.data && this.renderEncryptionMsgDialog()}
+                {!this.cmlStore.data && 
+                  <View style={styles.indicator}>
+                    <ActivityIndicator color="tomato" size="large"/>
+                  </View>
+                }
             </View>
       );
     }
@@ -208,5 +218,10 @@ export default class ChatMessageList extends Component<Props> {
       questionIntroMsgText: {
         color: 'grey',
         fontSize: 16,
-      }
+      },
+      indicator: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
   });
