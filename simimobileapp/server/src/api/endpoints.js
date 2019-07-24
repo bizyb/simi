@@ -35,6 +35,7 @@ const socket = {
     alert: "alert",
     onUserId: "onUserId",
     onSwipeDeck: "onSwipeDeck",
+    abort: "abort",
     mode: {
         end: "end",
         next: "next",

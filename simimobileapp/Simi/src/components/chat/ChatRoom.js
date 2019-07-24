@@ -61,6 +61,16 @@ export default class ChatRoom extends Component<Props> {
       this.sessionStore.chatPartner = data
       this.onConnection()
     })
+    // if a user has attempted to enter a non-existent chat room, abort it
+    // NB: This situation arises if op cancels the question and the 
+    // corresponding chat room also gets deleted. However, the question is on
+    // top of some sme's deck so never got updated. When that happens, the
+    // sme's right swipe attempts to create a new chat room. However, because
+    // the op can no longe connect to the new room, we should prevent sme from 
+    // creating a room and waiting forever for someone to join them.
+    this.sessionStore.socket.on(this.sessionStore.events.abort, ({}) => {
+      this.forceRedirect()
+    })
 
   // Listen for new messages
   // Update the data array on new message. Although we can update the data array
@@ -147,8 +157,15 @@ onRightSwipe = () => {
    * 
    */
   forceRedirect = () => {
+    if (this.sessionStore.isSme) {
+      this.sessionStore.isOp = false
+      this.sessionStore.isSme = false
+      this.onGoToDeck()
+    }
     if (this.sessionStore.isOp && Object.keys(this.sessionStore.chatPartner).length == 0 && 
       this.qStore.question != "" && this.qStore.questionId != "") {
+        this.sessionStore.isOp = false
+        this.sessionStore.isSme = false
         this.onGoHome()
       }
   }

@@ -126,7 +126,9 @@ const onJoin = (data, socket) => {
     let query = { roomId: data.roomId }
     settings.DEBUG && console.log("Attempting to join with data: ", data)
     dbApi.find(dbApi.collections.chatRoom, query).then((result) => {
-        if (result.length == 0) {
+        // create a new room only if the chat room doesn't exist and the 
+        // user is op
+        if (result.length == 0 && data.isOp) {
             // create a new chat room record 
             let metaData = {
                 lastModified: new Date(),
@@ -142,10 +144,10 @@ const onJoin = (data, socket) => {
                 questionId: data.questionId,
                 numUsers: 1,
             }
-	    settings.DEBUG && ("No room found so creating a new room with data: ", metaData)	
+	        settings.DEBUG && ("No room found so creating a new room with data: ", metaData)	
             _onJoinHelper(data.roomId, metaData, socket, questionId, update=false)
-        }
-        else {
+        } else if (result.length == 1 && data.isSme){
+            // join an existing chat room only if the requesting user is sme
             updateData = {
                 roomId: data.roomId,
                 sme: {
@@ -154,16 +156,19 @@ const onJoin = (data, socket) => {
                     socketId: socket.id,
                 },
             }
-		settings.DEBUG && ("Room found so updating with data: ", updateData)
+		    settings.DEBUG && ("Room found so updating with data: ", updateData)
             // Some sanity check... make sure op and sme are not
             // the same person
             if (result[0].op.userId != updateData.sme.userId) {
                 _onJoinHelper(data.roomId, updateData, socket, questionId, update=true)
             } else {
-		    settings.DEBUG && ("Op and Sme are the same person! Cannot join chat room.")
-	    }
+		        settings.DEBUG && ("Op and Sme are the same person! Cannot join chat room.")
+	        }
 
             
+        } else {
+            settings.DEBUG && ("Chat room creation not allowed: ", data)
+            socket.emit(endpoints.socket.abort, {})
         }
     }).catch((err) => {
         settings.DEBUG && console.log(err)
