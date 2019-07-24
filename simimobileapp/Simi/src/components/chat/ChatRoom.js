@@ -46,6 +46,7 @@ export default class ChatRoom extends Component<Props> {
   }
 
   componentDidMount() {
+    this.resetChatRoom()
     AppState.addEventListener('change', this._handleAppStateChange)
 
     // Listen for any sme/op connection events from the server
@@ -104,6 +105,23 @@ _handleAppStateChange = (nextAppState) => {
   if (nextAppState == "active" && this.sessionStore.isPopulated) {
       this.forceRedirect()
   }
+}
+
+/**
+ * Reset chat room state.
+ */
+resetChatRoom = (data={}, keys={}) => {
+    this.crStore.showConnectionDialog = true 
+    this.crStore.connected            = false
+    this.crStore.partnerOnline        = false
+    this.crStore.showControls         = false
+    this.crStore.editable             = false
+    this.crStore.isTyping             = false
+    this.crStore.data                 = data
+    this.crStore.keys                 = keys
+    this.crStore.buttonText           = CANCEL
+    this.crStore.buttonTextColor      = TOMATO 
+    this.crStore.onSubmit             = this.sessionStore.isSme ? this.onGoToDeck : this.onGoHome
 }
 
 onQuestionSubmit = () => {
@@ -230,17 +248,7 @@ onNewConnection = () => {
   }  
     this.sessionStore.socket.emit(this.sessionStore.events.isTyping, {isTyping: false})
     newData.push(preamble)
-    this.crStore.showConnectionDialog = true 
-    this.crStore.connected            = false
-    this.crStore.partnerOnline        = false
-    this.crStore.showControls         = false
-    this.crStore.editable             = false
-    this.crStore.isTyping             = false
-    this.crStore.data                 = newData
-    this.crStore.keys                 = keys
-    this.crStore.buttonText           = CANCEL
-    this.crStore.buttonTextColor      = TOMATO 
-    this.crStore.onSubmit             = this.sessionStore.isSme ? this.onGoToDeck : this.onGoHome
+    this.resetChatRoom(data=newData, keys=keys)
     
 }
 /**
