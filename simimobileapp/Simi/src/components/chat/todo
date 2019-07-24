@@ -5,4 +5,5 @@ Need a screenshot of
 4. Swipe Deck - done
 5. Landing
 ------------
-inbox not saving messages that went through the server
+-Figure out why the raquel email was never saved
+    - pushToInbox got called but nothing happened; no log statements 
