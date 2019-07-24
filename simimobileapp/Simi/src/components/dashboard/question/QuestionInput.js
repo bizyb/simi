@@ -5,6 +5,7 @@ import strings from "../../../assets/en/json/strings.json";
 import {observer, inject} from 'mobx-react';
 import  { request, userIsOnline } from "../../../api/api";
 import { DEBUG } from "../../../../settings";
+import { ScrollView } from 'react-native-gesture-handler';
 
 let PLACEHOLDER =  strings.ask.placeholder; 
 let DESCRIPTION =  strings.ask.description;
@@ -79,8 +80,8 @@ export default class QuestionInput extends Component<Props> {
     render() {
         return (
 
-            <View style={styles.container}>
-                    <KeyboardAvoidingView behavior="position">
+            <ScrollView style={styles.container}>
+                    <KeyboardAvoidingView behavior="padding">
                     <View style={styles.logoContainer}>
                         <Logo />
                     </View>
@@ -103,38 +104,31 @@ export default class QuestionInput extends Component<Props> {
                         <Text style={styles.userCount}>{this.qStore.formattedUserCount}</Text>
                     </View>
                    
-            </View>
+            </ScrollView>
         )}
     }
 
     const styles = StyleSheet.create({
         container: {
-            flex: 1,
-            justifyContent: 'center',
-            alignContent: 'center',
-
         },
         logoContainer: {
             flex: 1,
             justifyContent: 'flex-start',
             alignContent: "flex-start",
             marginTop: '40%',
+            paddingBottom: 20,
         },
 
         inputBoxContainer: {
-            width: '100%',
-            height: 50,
             paddingLeft: '5%',
             paddingRight: '5%',
-            marginTop: '40%',
 
         },
         inputBox: {
-            flex: 1,
             borderWidth: 1,
             borderColor: '#dddddd',
             borderRadius: 30,
-            height: 100,
+            height: 50,
             paddingLeft: 20,
             paddingRight: 20,
             fontSize: 20,
