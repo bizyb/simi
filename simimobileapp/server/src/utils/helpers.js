@@ -114,7 +114,8 @@ const reformQueue = (userId) => {
 }
 
 /**
- * Remove all questions from user queue that have already been answered.
+ * Remove all questions from user queue that have already been answered or 
+ * those where the chat room no longer exists.
  * @param {*} query 
  * 
  */
@@ -122,7 +123,7 @@ const updateQuestionQueue = (query) => {
     return new Promise((resolve, reject) => {
         dbApi.find(dbApi.collections.user, query).then((result) => {
             if (result.length == 0) {resolve([])}
-	    let queue = result[0].queue.filter(item => item != null ) // this question object may get corrupt sometims; TODO: this is a terrible fix
+	    let queue = result[0].queue.filter(item => item != null )
             let questionIds = queue.map(item => item.questionId)
             let newQuery = {
                 questionId: { $in: questionIds}
@@ -130,18 +131,29 @@ const updateQuestionQueue = (query) => {
 	    //settings.DEBUG && console.log("Update question query: ", newQuery)
             dbApi.find(dbApi.collections.question, newQuery).then((qResult) => {
 		    //settings.DEBUG && console.log("Questions found: ", qResult)
-                let activeQuestions = qResult.filter(item => !item.isAnswered)
-                let activeQuestionIds = activeQuestions.map(item => item.questionId)
-		    //settings.DEBUG && console.log("activeQuestions: ", activeQuestions)
-		    //settings.DEBUG && console.log("Old queue: ", queue)
-                let updatedQueue = queue.filter(old => activeQuestionIds.includes(old.questionId))
-		    //settings.DEBUG && console.log("updatedQueue: ", updatedQueue)
-                let update = {
-                    userId: query.userId,
-                    queue: updatedQueue,
+                let unansweredQs = qResult.filter(item => !item.isAnswered)
+                let unansweredQIds = unansweredQs.map(item => item.questionId)
+                // Now that we have the questionIds, check that their corresponding chat rooms
+                // are still active. This is how enforce sychronization between the queues and 
+                // active questions
+                newQuery = {
+                    roomId: { $in: unansweredQIds}
                 }
-                dbApi.update(dbApi.collections.user, update).then((result) => {
-                    resolve(updatedQueue)
+                settings.DEBUG && console.log("Unanswered Qs: ", unansweredQIds)
+                dbApi.find(dbApi.collections.chatRoom, newQuery).then((crResult) => {
+                    let activeQIds = crResult.map(item => item.roomId)
+                    settings.DEBUG && console.log("Active Qs: ", activeQIds)
+                    let updatedQueue = queue.filter(old => activeQIds.includes(old.questionId))
+                    settings.DEBUG && console.log("updatedQueue size: ", updatedQueue.length)
+                    let update = {
+                        userId: query.userId,
+                        queue: updatedQueue,
+                    }
+                    dbApi.update(dbApi.collections.user, update).then((result) => {
+                        resolve(updatedQueue)
+                    }).catch((err) => {
+                        reject(err)
+                    })
                 }).catch((err) => {
                     reject(err)
                 })
@@ -215,6 +227,8 @@ const cancelQuestion = (questionId) => {
     }).catch((err) => {
         settings.DEBUG && console.log(err)
     })
+
+
 }
 
 
