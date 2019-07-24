@@ -194,6 +194,8 @@ const onMessage = (data, socket) => {
         questionId: data.questionId,
         key: data.key,
     }
+	settings.DEBUG && console.log("onMessage raw data: ", data)
+   settings.DEBUG && console.log("onMessage: ", log)
     if (!data.isPreamble) {
         socket.broadcast.emit(endpoints.socket.message, log)
     }
@@ -242,6 +244,7 @@ const pushToInbox = (roomId, partnerPicture, isOp=false) => {
         }
         dbApi.find(dbApi.collections.chatRoom, query).then((crResult) => {
             // some sanity check to see if the chat room exists
+	    settings.DEBUG && console.log("Chatroom in pushToInbox: ", crResult)
             if (crResult.length > 0) {
                 query = {
                     questionId: crResult[0].roomId
@@ -249,6 +252,7 @@ const pushToInbox = (roomId, partnerPicture, isOp=false) => {
                 dbApi.find(dbApi.collections.chat, query).then((cResult) => {
                     // proceed if we have actual chat content, not just the preamble. The preamble
                     // is the first item in the chat.
+		    settings.DEBUG && console.log("Chat in pushToInbox: ", cResult)
                     if (cResult.length > 1) {
                         let userId = ""
                         let heading = ""
@@ -274,7 +278,7 @@ const pushToInbox = (roomId, partnerPicture, isOp=false) => {
                             userId: userId,
                             questionId: crResult[0].roomId
                         }
-                        settings.DEBUG && console.log("Inbox item creation date: ", inboxItem.lastModified)
+                        settings.DEBUG && console.log("New inbox item: ", inboxItem)
                         dbApi.insert(dbApi.collections.inbox, inboxItem).then((iResult) => {
                             settings.DEBUG && console.log(iResult)
                         }).catch((err) => {

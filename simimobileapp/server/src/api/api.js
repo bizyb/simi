@@ -23,7 +23,7 @@ const pushToQueue = (selected, data) => {
             queue: user.queue
         }
         dbApi.update(dbApi.collections.user, query).then((result) => {
-            settings.DEBUG && console.log(result)
+            settings.DEBUG && console.log("Pushed to queue: ", result.length)
         }).catch((err) => {
             settings.DEBUG && console.log(err)
         })
@@ -40,11 +40,12 @@ const findSmes = (data) => {
     let numShuffle = 10
     return new Promise((resolve, reject) => {
         let query = {
-            isOnline: true,
+		role: "user"
+            //isOnline: true,
         }
         dbApi.find(dbApi.collections.user, query).then((fResult) => {
             // remove op from the result 
-            fResult = fResult.filter(item => item.userId != data.op)
+            fResult = fResult.filter(item => item.userId != data.op && item.queue != null)  
 
             // randomize and select
             let shuffled = fResult.sort(function(){return .5 - Math.random()})
@@ -52,6 +53,7 @@ const findSmes = (data) => {
                 shuffled = fResult.sort(function(){return .5 - Math.random()})
             }
             let selected = shuffled.slice(0, n)
+	//settings.DEBUG && console.log("Selected SMEs: ", selected)
             pushToQueue(selected, data)
             resolve(selected.length)
         }).catch((err) => {

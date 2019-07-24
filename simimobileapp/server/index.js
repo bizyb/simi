@@ -89,9 +89,10 @@ app.post(endpoints.REST.user, (req, res) => {
     }
     let query = req.body
     let msg = {Status: "OK"}
+    //settings.DEBUG && console.log("User update query: ", query)
     dbApi.update(dbApi.collections.user, query).then((result) => {
-        settings.DEBUG && console.log("User updated with query", query)
         res.send(JSON.stringify(msg))
+	//settings.DEBUG && console.log("User update result: ", result)
     }).catch((err) => {
         settings.DEBUG && console.log(err)
         msg.Status = "FAIL"
@@ -153,7 +154,7 @@ app.post(endpoints.REST.question, (req, res) => {
         created:        new Date(),
         isAnswered:     false,
     }
-    settings.DEBUG && console.log("New question received: ", data)
+    settings.DEBUG && console.log("New question received: ", data.question)
     dbApi.insert(dbApi.collections.question, data).then((__result) => {
         api.findSmes({
             question: data.question,
