@@ -15,10 +15,10 @@ const ANONYMOUS = strings.inbox.anonymous;
 @observer
 export default class InboxItem extends Component<Props> {
     iStore = this.props.rootStore.inboxStore
-    subheadingLength = 32 //default
+    subheadingLength = 45 //default
 
     componentDidMount() {
-        this.computeSubheadingLength()
+        // this.computeSubheadingLength()
     }
 
     computeSubheadingLength = () => {
