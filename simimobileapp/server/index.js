@@ -89,9 +89,10 @@ app.post(endpoints.REST.user, (req, res) => {
     }
     let query = req.body
     let msg = {Status: "OK"}
+    //settings.DEBUG && console.log("User update query: ", query)
     dbApi.update(dbApi.collections.user, query).then((result) => {
-        settings.DEBUG && console.log("User update: ", result)
         res.send(JSON.stringify(msg))
+	//settings.DEBUG && console.log("User update result: ", result)
     }).catch((err) => {
         settings.DEBUG && console.log(err)
         msg.Status = "FAIL"
@@ -112,7 +113,7 @@ app.get(endpoints.REST.user, (req, res) => {
     let response = {count: -1}
     dbApi.find(dbApi.collections.user, query).then((result) => {
         settings.DEBUG && console.log("Number of users online: ", result.length)
-	settings.DEBUG && console.log("Users found: ", result)
+	//settings.DEBUG && console.log("Users found: ", result)
         response.count = result.length
         res.send(JSON.stringify(response))
     }).catch((err) => {
@@ -153,7 +154,7 @@ app.post(endpoints.REST.question, (req, res) => {
         created:        new Date(),
         isAnswered:     false,
     }
-    settings.DEBUG && console.log("New question received: ", data)
+    settings.DEBUG && console.log("New question received: ", data.question)
     dbApi.insert(dbApi.collections.question, data).then((__result) => {
         api.findSmes({
             question: data.question,
@@ -304,7 +305,7 @@ app.get(endpoints.REST.download, (req, res) => {
     dbApi.find(dbApi.collections.inbox, query).then((inboxRes) => {
         dbApi.find(dbApi.collections.knowledgebase, query).then((kbRes) => {
             dbApi.find(dbApi.collections.user, query).then((userRes) => {
-		settings.DEBUG && console.log("User result found for download: ", userRes)
+		//settings.DEBUG && console.log("User result found for download: ", userRes)
                 res.send(JSON.stringify({
                     knowledgeBaseData: kbRes,
                     inboxData: inboxRes,

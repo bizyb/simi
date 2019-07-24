@@ -51,7 +51,7 @@ const activityLog = (userId, cleanup=false) => {
     }
     if (cleanup) {
         dbApi.delete(dbApi.collections.activityLog, query, many=true).then((result) =>{
-            settings.DEBUG && console.log("Activity Log cleanup: ", result)
+            settings.DEBUG && console.log("Activity Log cleaned up")
         }).catch((err) => {
             settings.DEBUG && console.log(err)
         })
@@ -122,12 +122,12 @@ const updateQuestionQueue = (query) => {
     return new Promise((resolve, reject) => {
         dbApi.find(dbApi.collections.user, query).then((result) => {
             if (result.length == 0) {resolve([])}
-	    let queue = result[0].queue
+	    let queue = result[0].queue.filter(item => item != null ) // this question object may get corrupt sometims; TODO: this is a terrible fix
             let questionIds = queue.map(item => item.questionId)
             let newQuery = {
                 questionId: { $in: questionIds}
             }
-	    settings.DEBUG && console.log("Update question query: ", newQuery)
+	    //settings.DEBUG && console.log("Update question query: ", newQuery)
             dbApi.find(dbApi.collections.question, newQuery).then((qResult) => {
 		    //settings.DEBUG && console.log("Questions found: ", qResult)
                 let activeQuestions = qResult.filter(item => !item.isAnswered)
@@ -172,8 +172,9 @@ const userIsOffline = (userId) => {
         userId: userId,
         isOnline: false,
     }
+    settings.DEBUG && console.log("Setting user isOnline to FALSE for: ", userId)
     dbApi.update(dbApi.collections.user, data).then((result) => {
-        settings.DEBUG && console.log("Cleanup: ", result)
+        settings.DEBUG && console.log("Cleanup: ", result.length)
     }).catch((err) => {
         settings.DEBUG && console.log(err)
     })
@@ -201,12 +202,12 @@ const cancelQuestion = (questionId) => {
         isAnswered: false,
     }
     dbApi.delete(dbApi.collections.question, query).then((result) => {
-        settings.DEBUG && console.log("Question cleanup: ", result)
+        settings.DEBUG && console.log("Question cleaned up")
         query = {
             roomId: questionId
         }
         dbApi.delete(dbApi.collections.chatRoom, query).then((cResult) => {
-            settings.DEBUG && console.log("ChatRoom cleanup: ", cResult)
+            settings.DEBUG && console.log("ChatRoom cleaned up")
         }).catch((err) => {
             settings.DEBUG && console.log(err)
         })

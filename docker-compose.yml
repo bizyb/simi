@@ -9,8 +9,8 @@ services:
     restart: always
     volumes:
       - /data/db:/bitnami
-    expose:
-      - "27017"
+    ports:
+            - 27017:27017
     networks:
       - webappnetwork
     hostname: mongodb
