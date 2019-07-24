@@ -24,12 +24,20 @@ export default class LogoutButton extends Component<Props> {
     showLogoutDialog = () => { this.qStore.showLogoutDialog = true }
     hideLogoutDialog = () => { this.qStore.showLogoutDialog = false }
     logout = () => {
-        AsyncStorage.removeItem("userId")
         userIsOnline(this.sessionStore.userId, 
             this.sessionStore.endpoints.user, 
             this.sessionStore.endpoints.methods.post,
             isOnline=false)
-        this.sessionStore.userId = null
+        AsyncStorage.removeItem("userId")
+        AsyncStorage.removeItem("picture")
+        AsyncStorage.removeItem("last_name")
+        AsyncStorage.removeItem("first_name")
+        this.sessionStore.userId        = null
+        this.sessionStore.chatPartner   = {}
+        this.sessionStore.firstName     = null
+        this.sessionStore.socket        = null
+        this.sessionStore.isOp          = false
+        this.sessionStore.isSme         = false
         this.props.onPress()
     }
 

@@ -197,7 +197,6 @@ onLeave = () => {
  * emit the preamble.
  */
 onNewConnection = () => {
-  // DEBUG && console.log("Socket events: ", this.sessionStore.events)
   let newData = []
   let keys = {}
   let preamble = {
@@ -208,9 +207,7 @@ onNewConnection = () => {
     isPreamble: true
   }
   keys[preamble.key] = true
-  console.log("=============this.sessionStore.isOp: ", this.sessionStore.isOp)
   if (this.sessionStore.isOp) {
-    console.log("=============emitting the preamble: ", preamble)
     // the preamble can only be created by op
     this.sessionStore.socket.emit(this.sessionStore.events.message, preamble)
   }  

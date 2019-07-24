@@ -11,6 +11,7 @@ export class QuestionStore {
     constructor(rootStore) {
         this.rootStore = rootStore
     }
+    
 }
 
 export class ChatRoomStore {

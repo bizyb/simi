@@ -61,7 +61,7 @@
         "empty": "No messages yet",
         "logoutDesc": "Are you sure?",
         "logout": "Logout",
-        "anonymous": "Anonymous",
+        "anonymous": "Anonymous"
     },
     "knowledgeBase": {
         "placeholder": "Enter one topic at a time"
