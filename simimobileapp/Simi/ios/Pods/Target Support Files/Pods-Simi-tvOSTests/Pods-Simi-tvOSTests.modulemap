@@ -1,0 +1,6 @@
+framework module Pods_Simi_tvOSTests {
+  umbrella header "Pods-Simi-tvOSTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
