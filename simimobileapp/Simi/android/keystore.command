@@ -1,0 +1,1 @@
+sudo keytool -genkey -v -keystore my-upload-key.keystore -alias upload-key-alias -keyalg RSA -keysize 2048 -validity 10000
