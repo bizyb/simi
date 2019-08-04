@@ -28,7 +28,6 @@ How does it work?
 Asking:
 You type a question and your question will get forwarded to users who are currently online. A few seconds later, you will be connected to someone who can answer it and start chatting. If you're not happy with the answer, you can ask again as many times as you want.
 
-Sometimes only people near you may understand your question, especially if it is about a venue, a restaurant, etc. That's why Simi has the option to ask people nearest you. Otherwise, it will automatically forward the question to people around the world. 
 
 Answering:
 Simi will give you questions in the form of a swipe deck. If you want to answer a question, you right-swipe on it and you will be connected to the person who asked the question right away. However, if you don't want to answer it, you left-swipe on it. 
@@ -39,7 +38,7 @@ After every conversation, you get to rate your partner. Simi will use your feedb
 
 How much does it cost?
 -----------------------
-Simi is absolutely free. No ads. Nothing. Ask or answer as many times as you want, anytime, anyday. 
+Simi is absolutely free. No ads. Nothing. Ask or answer as many times as you want, anytime, anyday, on any topic. 
 
 Login
 ------------
@@ -51,7 +50,7 @@ Absolutely! Simi uses industry-standard encryption techniques to secure all conv
 
 Is it Anonymous?
 -----------------
-Simi is semi-anonymous. Your questions are posted anonymously but when you start a conversation with someone, your first name and your profile picture (if available) are shown to your partner.
+Simi is semi-anonymous. Your questions are posted anonymously but when you start a conversation with someone, your first name and profile picture (if available) are shown to your partner.
 
 
 Contacting Us
