@@ -103,6 +103,9 @@ android {
 
     defaultConfig {
         applicationId "com.simi"
+        manifestPlaceholders = [
+        appAuthRedirectScheme: 'com.Simi'
+        ]
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
