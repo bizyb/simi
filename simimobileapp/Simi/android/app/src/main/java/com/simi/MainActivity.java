@@ -1,4 +1,4 @@
-package com.elifsis.simi;
+package com.simi;
 
 import com.facebook.react.ReactActivity;
 import android.content.Intent;
