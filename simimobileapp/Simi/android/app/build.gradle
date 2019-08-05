@@ -102,9 +102,9 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.simi"
+        applicationId "com.elifsis.simi"
         manifestPlaceholders = [
-        appAuthRedirectScheme: 'com.Simi'
+        appAuthRedirectScheme: 'com.elifsis.simi'
         ]
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion

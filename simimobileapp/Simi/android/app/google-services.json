@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:708370716084:android:6ee5160ec815fa85",
         "android_client_info": {
-          "package_name": "com.simi"
+          "package_name": "com.elifsis.simi"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "708370716084-opc5ijvrckqiath35foe4esdu012oqa7.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.simi",
+            "package_name": "com.elifsis.simi",
             "certificate_hash": "707042412d8fe791435136a72d510002b2912209"
           }
         },
