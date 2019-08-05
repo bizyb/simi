@@ -1,0 +1,32 @@
+08-04 18:48:13.480 23522 23633 I ReactNativeJS:   picture: 'https://lh3.googleusercontent.com/-qyo-0Vs9S_s/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3rfyHyl74OSV7Rt9-d-GZt4Lusauqw/s96-c/photo.jpg',
+08-04 18:48:13.480 23522 23633 I ReactNativeJS:   email: 'bizmelesse@gmail.com',
+08-04 18:48:13.480 23522 23633 I ReactNativeJS:   last_name: 'Melesse',
+08-04 18:48:13.480 23522 23633 I ReactNativeJS:   first_name: 'Biz',
+08-04 18:48:13.480 23522 23633 I ReactNativeJS:   userId: 'usmc6d82f7c57dc4b47a5c3a0d0f3e756a7' }
+08-04 18:48:13.521 23522 23633 I ReactNativeJS: ==== Attempting to download user data===
+08-04 18:48:13.635 23522 23633 I ReactNativeJS: 'Attempting to init socket connection to: ', 'https://simichat.net'
+08-04 18:48:13.776 23522 23633 I ReactNativeJS: Socket connection made
+08-04 18:48:13.874 23522 23633 I ReactNativeJS: { Status: 'OK' }
+08-04 18:48:14.149 23522 23633 I ReactNativeJS: { Status: 'OK' }
+08-04 18:48:33.491 23522 23633 I ReactNativeJS: { Status: 'OK' }
+08-04 18:48:34.796 23522 23633 I ReactNativeJS: 'Inbox messages retrieved: ', 14
+08-04 18:48:34.877 23522 23633 I ReactNativeJS: { Status: 'OK' }
+08-04 18:48:37.820 23522 23633 I ReactNativeJS: { Status: 'OK' }
+08-04 18:49:42.595 23522 23633 I ReactNativeJS: { Status: 'OK' }
+08-04 18:49:43.635 23522 23633 I ReactNativeJS: 'App state: ', 'background'
+08-04 18:49:43.635 23522 23633 I ReactNativeJS: Attempting session cleanup
+08-04 18:49:43.721 23522 23633 I ReactNativeJS: { message: 'Cleanup request submitted' }
+08-04 19:00:01.362 23522 23633 I ReactNativeJS: Login was cancelled
+08-04 19:00:01.789 23522 23633 I ReactNativeJS: Socket reconnected
+08-04 19:00:01.790 23522 23633 I ReactNativeJS: Socket connection made
+08-04 19:00:01.795 23522 23633 E ReactNativeJS: null is not an object (evaluating 'n.sessionStore.socket.emit')
+08-04 19:00:01.866 23522 23633 I ReactNativeJS: 'App state: ', 'background'
+08-04 19:00:01.866 23522 23633 I ReactNativeJS: Attempting session cleanup
+(node:15356) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'message' of undefined
+    at handleError (/Users/biz/simi/simimobileapp/Simi/node_modules/@react-native-community/cli/build/cliEntry.js:106:34)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+    at Function.Module.runMain (internal/modules/cjs/loader.js:745:11)
+    at startup (internal/bootstrap/node.js:283:19)
+    at bootstrapNodeJSCore (internal/bootstrap/node.js:743:3)
+(node:15356) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 2)
+(node:15356) [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.
