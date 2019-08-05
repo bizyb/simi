@@ -1,4 +1,4 @@
-package com.simi;
+package com.elifsis.simi;
 
 import android.app.Application;
 

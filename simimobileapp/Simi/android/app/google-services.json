@@ -8,17 +8,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:708370716084:android:6ee5160ec815fa85",
+        "mobilesdk_app_id": "1:708370716084:android:b24de8fffaf9c0d2",
         "android_client_info": {
-          "package_name": "com.simi"
+          "package_name": "com.elifsis.simi"
         }
       },
       "oauth_client": [
         {
-          "client_id": "708370716084-opc5ijvrckqiath35foe4esdu012oqa7.apps.googleusercontent.com",
+          "client_id": "708370716084-hqlssfc83tgbcltress6gdkgh6j2itti.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.simi",
+            "package_name": "com.elifsis.simi",
             "certificate_hash": "707042412d8fe791435136a72d510002b2912209"
           }
         },
@@ -38,6 +38,13 @@
             {
               "client_id": "708370716084-a3r72eauq05pehoba7sdvagdpa8td6dn.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "708370716084-jhkj38s2tf9ueeroienboalqq6gkt6tt.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.Simi"
+              }
             }
           ]
         }
