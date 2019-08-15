@@ -10,10 +10,16 @@ services:
     volumes:
       - /data/db:/bitnami
     ports:
-            - 27017:27017
+      - 27017:27017
     networks:
       - webappnetwork
     hostname: mongodb
+  redis:
+    image: bitnami/redis
+    environment:
+      - REDIS_PASSWORD=Phattyacid789
+    ports:
+      - "6379"
   client:
     container_name: client
     image: 'client'
@@ -22,6 +28,10 @@ services:
     ports:
       - 80:80
       - 443:443
+    depends_on:
+      - mobileappserver01
+      - mobileappserver02
+      - mobileappserver03
     volumes:
       - /home/simi/nginx-certbot/data/nginx:/etc/nginx/conf.d
       - /home/simi/nginx-certbot/data/certbot/conf:/etc/letsencrypt
@@ -38,11 +48,29 @@ services:
       - "5000"
     networks:
       - webappnetwork
-  mobileappserver:
-    container_name: mobileappserver
+  mobileappserver01:
+    container_name: mobileappserver01
     image: 'mobileappserver'
     restart: always
-    hostname: mobileappserver
+    hostname: mobileappserver01
+    expose:
+      - "5001"
+    networks:
+      - webappnetwork
+  mobileappserver02:
+    container_name: mobileappserver02
+    image: 'mobileappserver'
+    restart: always
+    hostname: mobileappserver02
+    expose:
+      - "5001"
+    networks:
+      - webappnetwork
+  mobileappserver03:
+    container_name: mobileappserver03
+    image: 'mobileappserver'
+    restart: always
+    hostname: mobileappserver03
     expose:
       - "5001"
     networks:
