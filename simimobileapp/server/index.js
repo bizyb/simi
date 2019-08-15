@@ -8,6 +8,9 @@ const settings = require("./settings")
 const cors = require("cors")
 const app = require('express')()
 const http = require('http').Server(app)
+const Redis = require("ioredis");
+const redis = new Redis();
+const pub = new Redis();
 const io = require('socket.io')(http)
 const port = 5001
 
@@ -360,6 +363,23 @@ app.post(endpoints.REST.cleanup, (req, res) => {
  * Listen for an incoming socket connection and register 
  * event handlers.
  */
-io.on(endpoints.socket.connection, socketEvents.eventHandler) 
+io.on(endpoints.socket.connection, socketEvents.eventHandler)
+
+// /**
+//  * Set redis listeners
+//  */
+// redis.subscribe("chat", function(err, count) {
+//     // Now we are subscribed to both the 'news' and 'music' channels.
+//     // `count` represents the number of channels we are currently subscribed to.
+  
+//     pub.publish("news", "Hello world!");
+//     pub.publish("music", "Hello again!");
+//   });
+  
+//   redis.on("message", function(channel, message) {
+//     // Receive message Hello world! from channel news
+//     // Receive message Hello again! from channel music
+//     console.log("Receive message %s from channel %s", message, channel);
+//   });
 
 http.listen(port, () => settings.DEBUG && console.log(`Listening on port ${port}`));
