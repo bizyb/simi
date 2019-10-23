@@ -12,7 +12,7 @@ class UserController {
 
     @GetMapping("/count") //TODO: user must be logged in to access this endpoint
     fun count(): String {
-        return "17"
+        return "20"
     }
 
 }

@@ -100,9 +100,9 @@ export default class QuestionInput extends Component<Props> {
                             {DESCRIPTION}
                         </Text>
                     </View>
-                    <View style={styles.userCount}>
+                    {/* <View style={styles.userCount}>
                         <Text style={styles.userCount}>{this.qStore.formattedUserCount}</Text>
-                    </View>
+                    </View> */}
                    
             </ScrollView>
         )}

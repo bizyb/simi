@@ -14,71 +14,71 @@ services:
     networks:
       - webappnetwork
     hostname: mongodb
-  redis:
-    image: bitnami/redis
-    environment:
-      - REDIS_PASSWORD=Phattyacid789
-    ports:
-      - "6379"
-  client:
-    container_name: client
-    image: 'client'
-    restart: always
-    hostname: client
-    ports:
-      - 80:80
-      - 443:443
-    depends_on:
-      - mobileappserver01
-      - mobileappserver02
-      - mobileappserver03
-    volumes:
-      - /home/simi/nginx-certbot/data/nginx:/etc/nginx/conf.d
-      - /home/simi/nginx-certbot/data/certbot/conf:/etc/letsencrypt
-      - /home/simi/nginx-certbot/data/certbot/www:/var/www/certbot
-    networks:
-      - webappnetwork
-    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
-  webappserver:
-    container_name: webappserver
-    image: 'webappserver'
-    restart: always
-    hostname: webappserver
-    expose:
-      - "5000"
-    networks:
-      - webappnetwork
-  mobileappserver01:
-    container_name: mobileappserver01
-    image: 'mobileappserver'
-    restart: always
-    hostname: mobileappserver01
-    expose:
-      - "5001"
-    networks:
-      - webappnetwork
-  mobileappserver02:
-    container_name: mobileappserver02
-    image: 'mobileappserver'
-    restart: always
-    hostname: mobileappserver02
-    expose:
-      - "5001"
-    networks:
-      - webappnetwork
-  mobileappserver03:
-    container_name: mobileappserver03
-    image: 'mobileappserver'
-    restart: always
-    hostname: mobileappserver03
-    expose:
-      - "5001"
-    networks:
-      - webappnetwork
-  certbot:
-    image: certbot/certbot
-    restart: always
-    volumes:
-      - /home/simi/nginx-certbot/data/certbot/conf:/etc/letsencrypt
-      - /home/simi/nginx-certbot/data/certbot/www:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+  # redis:
+  #   image: bitnami/redis
+  #   environment:
+  #     - REDIS_PASSWORD=Phattyacid789
+  #   ports:
+  #     - "6379"
+  # client:
+  #   container_name: client
+  #   image: 'client'
+  #   restart: always
+  #   hostname: client
+  #   ports:
+  #     - 80:80
+  #     - 443:443
+  #   depends_on:
+  #     - mobileappserver01
+  #     - mobileappserver02
+  #     - mobileappserver03
+  #   volumes:
+  #     - /home/simi/nginx-certbot/data/nginx:/etc/nginx/conf.d
+  #     - /home/simi/nginx-certbot/data/certbot/conf:/etc/letsencrypt
+  #     - /home/simi/nginx-certbot/data/certbot/www:/var/www/certbot
+  #   networks:
+  #     - webappnetwork
+  #   command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+  # webappserver:
+  #   container_name: webappserver
+  #   image: 'webappserver'
+  #   restart: always
+  #   hostname: webappserver
+  #   expose:
+  #     - "5000"
+  #   networks:
+  #     - webappnetwork
+  # mobileappserver01:
+  #   container_name: mobileappserver01
+  #   image: 'mobileappserver'
+  #   restart: always
+  #   hostname: mobileappserver01
+  #   expose:
+  #     - "5001"
+  #   networks:
+  #     - webappnetwork
+  # mobileappserver02:
+  #   container_name: mobileappserver02
+  #   image: 'mobileappserver'
+  #   restart: always
+  #   hostname: mobileappserver02
+  #   expose:
+  #     - "5001"
+  #   networks:
+  #     - webappnetwork
+  # mobileappserver03:
+  #   container_name: mobileappserver03
+  #   image: 'mobileappserver'
+  #   restart: always
+  #   hostname: mobileappserver03
+  #   expose:
+  #     - "5001"
+  #   networks:
+  #     - webappnetwork
+  # certbot:
+  #   image: certbot/certbot
+  #   restart: always
+  #   volumes:
+  #     - /home/simi/nginx-certbot/data/certbot/conf:/etc/letsencrypt
+  #     - /home/simi/nginx-certbot/data/certbot/www:/var/www/certbot
+  #   entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
