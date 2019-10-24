@@ -63,7 +63,6 @@ export default class Login extends Component {
         let value = await AsyncStorage.getItem('userId')
         if (value) {
             this.sessionStore.userId = value
-            this.setFirstName()
             this.download()
         } 
     }
@@ -87,6 +86,7 @@ export default class Login extends Component {
             this.sessionStore.endpoints     = result.endpoints
             this.sessionStore.downloadComplete = true
             this.sessionStore.downloadError    = false
+            this.setFirstName()
             userIsOnline(this.sessionStore.userId, 
                             this.sessionStore.endpoints.user, 
                             this.sessionStore.endpoints.methods.post,
@@ -131,10 +131,11 @@ export default class Login extends Component {
      */
     setFirstName = async () => {
         this.sessionStore.firstName = await AsyncStorage.getItem("first_name")
+        DEBUG && console.log("Device user's first name is " + this.sessionStore.firstName)
     }    
     
     /*
-      Save user info to device 
+      First time login: Save user info to device 
      */
     setUserInfo = async (userData) => {
         DEBUG && console.log("Setting user information after auth login:", userData)

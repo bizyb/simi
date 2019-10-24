@@ -133,6 +133,7 @@ onQuestionSubmit = () => {
   }
   request(data, this.sessionStore.endpoints.question, this.sessionStore.endpoints.methods.post).then((result) => {
     this.qStore.questionId = result.questionId
+    DEBUG && console.log("About to start a new chat room for " + this.sessionStore.firstName)
     join(this.sessionStore, this.qStore)
     this.onNewConnection()
   }).catch((err) => {
@@ -154,6 +155,8 @@ onRightSwipe = () => {
   request(data, this.sessionStore.endpoints.rightSwipe, this.sessionStore.endpoints.methods.get).then((result) => {
     DEBUG && console.log("onRightSwipe: ", result)
     if (result.canJoin) {
+      DEBUG && console.log("About to join a chat room for " + this.sessionStore.firstName)
+      DEBUG && console.log(this.sessionStore)
       join(this.sessionStore, this.qStore)
       this.onNewConnection() 
     } else {
