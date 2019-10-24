@@ -16,6 +16,7 @@ let MAX_LENGTH = 146
 export default class QuestionInput extends Component<Props> {
     qStore = this.props.rootStore.questionStore
     sessionStore = this.props.rootStore.sessionStore
+    crStore = this.props.rootStore.chatRoomStore
     focusListener = this.props.navigation.addListener("didFocus", () => {
         // The screen is focused
         this.qStore.formattedUserCount = this.formattedUserCount()
@@ -66,6 +67,7 @@ export default class QuestionInput extends Component<Props> {
     onSubmit = () => {
         this.sessionStore.isOp = true
         this.sessionStore.isSme = false
+        this.crStore.message = ""
         if (this.qStore.question.trim().length > 0) {
             this.qStore.value = this.qStore.question
             this.props.navigation.navigate("ChatRoom") 

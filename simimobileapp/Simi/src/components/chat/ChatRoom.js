@@ -48,13 +48,15 @@ export default class ChatRoom extends Component<Props> {
   componentDidMount() {
     this.resetChatRoom()
     AppState.addEventListener('change', this._handleAppStateChange)
-
+  
     // Listen for any sme/op connection events from the server
     let eventName
     if (this.sessionStore.isOp) {
+      DEBUG && console.log("Current user is OP. Handling question submission. ")
       this.onQuestionSubmit()
       eventName = this.sessionStore.events.smeFound
     } else {
+      DEBUG && console.log("Current user is not OP. Handling right swipe.")
       this.onRightSwipe()
       eventName = this.sessionStore.events.opFound
     }
@@ -209,20 +211,27 @@ alertHandler = (alert) => {
  * the input box but keep the "end" conrol option intact.
  */
 onLeave = () => {
-  this.crStore.editable         = false
-  this.crStore.userDisconnected = true
-  this.crStore.partnerOnline    = false
-  this.crStore.isTyping         = false
-  this.crStore.buttonTextColor  = GREY
+  
   let data = {
     roomId: this.qStore.questionId,
     isOp: this.sessionStore.isOp,
     isSme: this.sessionStore.isSme,
     partnerPicture: this.sessionStore.chatPartner.picture,
   }
+  if (this.sessionStore.isSme) { 
+    DEBUG && console.log("This user is SME. Setting question to an empty string.")
+    this.qStore.value = "" 
+  }
+  this.crStore.editable         = false
+  this.crStore.userDisconnected = true
+  this.crStore.partnerOnline    = false
+  this.crStore.isTyping         = false
+  this.crStore.message          = ""
+  this.crStore.buttonTextColor  = GREY
   this.qStore.questionId = ""
   this.qStore.question = ""
-  if (this.sessionStore.isSme) { this.qStore.value = "" }
+  this.sessionStore.isOp = false
+  this.sessionStore.isSme = false
   this.sessionStore.socket.emit(this.sessionStore.events.leave, data)
 }
 
