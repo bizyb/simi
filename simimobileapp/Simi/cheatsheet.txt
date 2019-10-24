@@ -1,0 +1,12 @@
+Useful commands:
+Run anroid app: react-native run-android
+Log android app: react-native log-android
+Build release bundle:
+    1. cd android
+    2. ./gradlew bundleRelease
+    3. Locate the bundle to upload to the play store at: android/app/build/outputs/bundle/release/app.aab
+Test the bundle:
+    1. adb uninstall "com.elifsis.simi"
+    2. react-native run-android --variant=release
+Start the emulator: emulator -avd Pixel_3_XL_API_28
+List avds: emulator -list-avds
