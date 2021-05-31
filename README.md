@@ -1,3 +1,9 @@
+# What is Simi?
+---
+
+Simi is an Android/iOS app that you would get if Tinder and Yahoo Answers had a child. Users submit any questions they may have and they will be instantly matched with an SME (subject matter expert) who may be able to answer the question. In order to pick up the question, anyone interested in becoming an SME must swipe through the swipe deck of questions. They can left swipe on a question if they want to pass and right swipe if they want to answer it and engage in a conversation with the user. Unlike SMS or typical chatting apps, a Simi chat session is realtime and only valid while both users are chatting. After either one departs the chat room, the sessions ends and cannot be re-instantiated. There are several security features in place to reduce chances of bad behavior.
+
+
 # Initial setup on a new machine
 ---
 
